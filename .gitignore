@@ -1,0 +1,4 @@
+.DS_Store
+.gobble
+coverage
+node_modules

@@ -1,0 +1,3 @@
+let routes = {};
+
+export { routes }
