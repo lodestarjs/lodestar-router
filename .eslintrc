@@ -1,4 +1,8 @@
 {
+  "rules": {
+    "quotes": [ 2, "single" ],
+    "no-var": 2
+  },
   "ecmaFeatures": {
     "modules": true
   },

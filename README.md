@@ -1,6 +1,6 @@
 lodestar-router
 ==
-A standalone router, which will also used within the lodestar MVC.
+_A standalone router, which will also used within the lodestar MVC._
 
 **This router is currently in heavy development and as such may not be ready for full production usage.**
 
@@ -15,13 +15,40 @@ var router = new Router();
 
 ## Configuration
 
+The available options to configure are the following with their defaults:
+
+```
+{
+  useHistory: false,
+  debug: true,
+  loggingLevel: 'LOW',
+  logTransitions: false
+}
+```
+
+#### useHistory
+
+If this is set to true, then if the History API is available then the hash will be removed from the url and use pushState to put the current state into the URL.
+
+#### debug
+
+This option will log all of the issues that the lodestar-router encounters. By default this will only log a minimal amount of issues i.e. the important ones.
+
+#### loggingLevel
+
+By default this is set to LOW, so it will only tell you about the issues that we feel you should know. However, if this is set to HIGH then everything in the Router will be logged.
+
+#### logTransitions
+
+Perhaps an over the top option, but it may be useful to some. This options will log the transition to each page. I.e. if you go form the index page `'/'` to the blog page `'/blog'`. Then you will be told `Transitioned from '/' to '/blog'.`
+
 ## Creating a route
 
 For creating routes, we have provided an easy way and a more manual, harder way. We feel that the easy way will make it easy for a beginner to use this framework however the manual way will in the end be more efficient and faster at creating routes due to basically just inserting the route object into the framework.
 
 ### The easy way - createRoute()
 
-The easy way, accepts either an [Object](#An-object) of options or two seperate parameters.
+The easy way, accepts an [Object](#An-object) of options.
 
 As the lodestar-router operates by a hierarchy, you may be wondering how this shorthand would map to that hierarchy?
 
@@ -31,30 +58,18 @@ Simple! To declare a parent to a current route you wrap that part of the route i
 ```
 var router = new Router();
 
-router.createRoute('/', function() {
-  console.log('I am the index route!');
+router.createRoute({
+  path: '/',
+  controller: function() {
+    console.log('I am the index route!');
+  }
 });
 
-router.createRoute('[/]dashboard', function() {
+router.createRoute({
+  path: '[/]dashboard',
+  controller: function() {
     console.log('I am a child of that ^ index route!');
-});
-```
-
-#### Two parameters - createRoute(String, Function)
-
-Using two paremeters is a nice short way of creating a route by far the easiest way to create a route. The downside is that you can't configure the routes that much, but sometime that's not necessarily a bad thing!
-
-The two parameters that you pass this function are the route and the function you wish to execute on that route.
-
-**Example**
-```
-
-var router = new Router();
-
-router.createRoute('/', function() {
-
-    console.log("I am on the home route!');
-
+  }
 });
 
 ```
@@ -87,8 +102,11 @@ Using `:`, the dynamic segment, allows one segment of the url to be switched out
 ```
 var router = new Router();
 
-router.createRoute('/blog/:postName', function() {
+router.createRoute({
+  path: '/blog/:postName',
+  controller: function() {
     console.log(this.routeData.postName);
+  }
 });
 ```
 
@@ -102,10 +120,44 @@ This might be different to a 404 page as it might be useful if you have a CMS wh
 ```
 var router = new Router();
 
-router.createRoute('/client-area/*clientStuff', function() {
+router.createRoute({
+  path: '/client-area/*clientStuff',
+  controller: function() {
     console.log(this.clientStuff); // This will be an array
+  }
 });
 ```
 
 
 ### The manual way
+
+Now, when I say manual, I mean manual. This is basically a way of inserting the final route object, as the lodestar-router builds it, into the Router.
+
+The benefits of creating the router this way is that it should give a big performance boost as unlike the `createRoute()` way, the Router won't do any extra check on what you're inserting as it expects it to be right.
+
+So I advise that you only do it this way if you know what you're doing.
+
+```
+router.map({
+  '/' : {
+
+     controller: function() { console.log('index'); },
+     childRoutes: {
+
+        'home': {
+
+           controller: function() { console.log('home'); },
+
+           childRoutes: {
+
+              ':id': { controller: function() { console.log(':id'); }}
+
+           }
+
+        }
+
+     }
+
+  }
+});
+```

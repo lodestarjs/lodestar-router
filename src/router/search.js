@@ -121,7 +121,7 @@ function resolve ( path ) {
 
 }
 
-function traverse( parents, route, controller ) {
+function traverse( parents, routeObject ) {
 
   let pointer = routes,
     createPointer = {};
@@ -150,12 +150,12 @@ function traverse( parents, route, controller ) {
     createPointer.childRoutes = {};
   }
 
-  route = route.substring( route.indexOf(']') + 1 )
-            .replace(/^\//, '')
-            .replace(/\/$/, '');
+  routeObject.path = routeObject.path.substring( routeObject.path.indexOf(']') + 1 )
+                      .replace(/^\//, '')
+                      .replace(/\/$/, '');
 
-  createPointer.childRoutes[ route ] = {};
-  createPointer.childRoutes[ route ].controller = controller;
+  createPointer.childRoutes[ routeObject.path ] = {};
+  createPointer.childRoutes[ routeObject.path ].controller = routeObject.controller;
 
 }
 

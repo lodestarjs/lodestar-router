@@ -3,6 +3,7 @@ import { config, modifyConfig } from './config/defaults';
 import { createRoute, map } from './router/create';
 import { getRoutes } from './router/retrieve';
 import { resolve } from './router/search';
+import { listener } from './router/listener';
 
 
 function Router( options ) {
@@ -19,7 +20,8 @@ Router.prototype = {
   createRoute,
   map,
   getRoutes,
-  resolve
+  resolve,
+  listener
 
 };
 

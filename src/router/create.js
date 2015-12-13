@@ -12,56 +12,30 @@ function map( routeObject ) {
 
 }
 
-function createRoute( route, controller ) {
+function createRoute( routeObject ) {
 
-  if ( !route ) throw new Error('Please define the route to use.');
+  if ( !routeObject ) throw new Error('No route object defined.')
 
-  if ( !controller || typeof controller !== 'function' ) throw new Error('Please define the function that should be executed.')
+  if ( !routeObject.path ) throw new Error('Please define the route to use.');
+
+  if ( !routeObject.controller || typeof routeObject.controller !== 'function' ) throw new Error('Please define the function that should be executed.');
 
   let parentUrls = '';
 
-  if(route.indexOf('[') > -1){
+  if(routeObject.path.indexOf('[') > -1){
 
-    parentUrls = getParent(route);
+    parentUrls = getParent(routeObject.path);
 
-    traverse( parentUrls, route, controller );
+    traverse( parentUrls, routeObject );
 
   } else {
 
-    route = formatRoute(route);
-
-    routes[route] = {};
-    routes[route].controller = controller;
+    routeObject.path = formatRoute(routeObject.path);
+    routes[routeObject.path] = {};
+    routes[routeObject.path].controller = routeObject.controller;
 
   }
 
 }
-
-// var splitUrl = '',
-//   parentUrl = false,
-//   formattedName = '',
-//   dynamicName = '';
-
-// if(url.indexOf('[') > -1){
-//   parentUrl = getParent(url);
-// }
-
-// url = url.replace(/[\[\]]*/g, '');
-
-// formattedName = formatRoute(url);
-
-// routes[formattedName] = {};
-
-// routes[formattedName].controller = stuff;
-
-// if(parentUrl){
-//   routes[formattedName].parent = parentUrl === '' ? '/' : parentUrl;
-// }
-
-// dynamicName = formattedName.replace(/(\*[a-z0-9]*)\/?/gi, '.*').replace(/(\:[a-z0-9]*)\/?/gi, '[^\\/]*\/?');
-
-// if(currentRoute().match('^' + dynamicName + '$')) {
-//   executeRoute(currentRoute());
-// }
 
 export { map, createRoute }

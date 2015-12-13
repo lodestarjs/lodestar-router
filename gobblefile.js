@@ -5,7 +5,11 @@ var gobble = require( 'gobble' ),
 
 lib = gobble([
   src
-    .observe( 'eslint' )
+    .observe( 'eslint', {
+
+      reportOnly: false
+
+    } )
     .transform( 'rollup-babel', {
       format: 'umd',
       transform: function ( src, path ) {

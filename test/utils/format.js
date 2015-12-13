@@ -7,6 +7,9 @@ describe('format', function() {
   describe('formatRoute()', function() {
 
     var testUrls = [{
+      test: '',
+      expected: '/'
+    }, {
       test: '/index',
       expected: '/index'
     }, {
