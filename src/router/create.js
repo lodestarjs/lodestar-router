@@ -45,8 +45,6 @@ function createRoute( routeObject ) {
 
   privateConfig.usingMap = false;
 
-  listener();
-
 }
 
 export { map, createRoute }
