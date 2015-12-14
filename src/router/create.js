@@ -15,6 +15,8 @@ function map( routeObject ) {
 
   privateConfig.usingMap = true;
 
+  listener();
+
 }
 
 function createRoute( routeObject ) {
