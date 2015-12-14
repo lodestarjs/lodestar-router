@@ -33,7 +33,6 @@ function dynamicSplit ( path, splitKey ) {
 
   let output = {};
 
-  // Remove the first element as it's just empty
   splitKey.shift();
 
   for( let i = 0, ii = splitKey.length; i < ii; i++){
@@ -41,6 +40,8 @@ function dynamicSplit ( path, splitKey ) {
     output[splitKey[i].replace(/\//g, '')] = path.match(/[^\/]*/g)[i !== 0 ? i + i: i];
 
   }
+
+  return output;
 
 }
 
@@ -69,6 +70,7 @@ function resolve ( path ) {
         if ( splitKey.length > 2 ) {
 
           routeData = dynamicSplit( path, splitKey );
+          dynamicKey = key.replace(/\:[^\/]*/g, '[^\\/]*');
 
         } else {
 
@@ -79,9 +81,9 @@ function resolve ( path ) {
 
       }
 
-      if ( key.indexOf('*') > -1 ) {
+      if ( key.match(/\*[a-z]+/i) ) {
 
-        routeData[key.replace('*', '')] = path.match(/.*/)[0].split('/');
+        routeData[key.replace(/\*[a-z]+/i, '')] = path.match(/.*/)[0].split('/');
         dynamicKey = /.*/;
 
       }
