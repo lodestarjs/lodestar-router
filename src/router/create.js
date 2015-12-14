@@ -45,6 +45,15 @@ function createRoute( routeObject ) {
 
   }
 
+  if ( privateConfig.usingMap === '' ) {
+
+    // Push to the end of the Queue
+    setTimeout( function() {
+      listener();
+    }, 0);
+
+  }
+
   privateConfig.usingMap = false;
 
 }

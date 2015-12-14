@@ -2,7 +2,7 @@ lodestar-router
 ==
 _A standalone router, which will also used within the lodestar MVC._
 
-**This router is currently in heavy development and as such may not be ready for full production usage.**
+**This router is currently in development and as such may not be ready for full production usage.**
 
 
 ## Starting out

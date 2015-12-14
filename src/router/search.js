@@ -101,8 +101,8 @@ function resolve ( path ) {
         if ( !pointer[ key ].active && !isFinal ) {
 
           pointer[ key ].routeData = routeData;
-          pointer[ key ].controller();
           pointer[ key ].active = true;
+          pointer[ key ].controller();
 
         }
 
@@ -133,8 +133,8 @@ function resolve ( path ) {
     if ( isFinal ) {
 
       pointer[ keyCache ].routeData = routeData;
-      pointer[ keyCache ].controller();
       pointer[ keyCache ].active = true;
+      pointer[ keyCache ].controller();
 
     } else if ( !matchedParent ) {
 

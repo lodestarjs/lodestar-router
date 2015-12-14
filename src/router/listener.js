@@ -60,7 +60,8 @@ function listener() {
   if ( config.loggingLevel === 'HIGH' ) logger.debug('Listener is now active.');
 
   let windowListener = hasEventListener ? window.addEventListener : window.attachEvent,
-    docListener = hasEventListener ? document.addEventListener : document.attachEvent;
+    docListener = hasEventListener ? document.addEventListener : document.attachEvent,
+    initialLink = config.useHistory && hasHistory ? window.location.pathname : window.location.hash;
 
   privateConfig.listenerActive = true;
 
@@ -70,6 +71,7 @@ function listener() {
 
     windowListener(hasEventListener ? 'hashchange' : 'onhashchange', function() { resolve( format( window.location.hash ) ); } );
 
+
   } else if ( config.useHistory && hasHistory ) {
 
     if ( config.loggingLevel === 'HIGH' ) logger.debug('Listening for clicks or popstate.');
@@ -78,6 +80,9 @@ function listener() {
     windowListener('popstate', function() { resolve( format( window.location.pathname )); } );
 
   }
+
+  // Fire the initial page load link
+  resolve( format( initialLink ) );
 
 }
 

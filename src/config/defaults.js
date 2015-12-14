@@ -1,6 +1,5 @@
 import { fullExtend as extend } from '../utils/object.js';
 
-
 let config = {
   useHistory: false,
   debug: true,
@@ -19,6 +18,5 @@ function modifyConfig( changes ) {
   }
 
 }
-
 
 export { config, modifyConfig };
