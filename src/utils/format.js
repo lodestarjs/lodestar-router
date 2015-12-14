@@ -7,7 +7,7 @@ function formatRoute( route ) {
   }
 
   route = route.replace(/^(\/?[\#\!\?]+)/, '')
-                .replace(/$\//, '');
+              .replace(/$\//, '');
 
   if ( config.basePath.length ) {
     route.replace( config.basePath, '');
@@ -21,7 +21,7 @@ function getParent( url ) {
   let begin = url.indexOf('[') + 1,
       end = url.indexOf(']');
   return url.substring(begin, end);
-};
+}
 
 
 

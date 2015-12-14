@@ -20,8 +20,7 @@ Router.prototype = {
   createRoute,
   map,
   getRoutes,
-  resolve,
-  listener
+  resolve
 
 };
 

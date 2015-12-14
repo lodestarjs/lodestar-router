@@ -5,9 +5,9 @@ import { logger } from '../utils/log';
 
 function clearCache ( key, pointer ) {
 
-  var props = Object.getOwnPropertyNames(pointer);
+  let props = Object.getOwnPropertyNames(pointer);
 
-  for (var i = 0, ii = props.length; i < ii; i++) {
+  for (let i = 0, ii = props.length; i < ii; i++) {
 
     if (props[i] !== key) {
 
@@ -27,6 +27,21 @@ function clearCache ( key, pointer ) {
 
 function notFound ( path, originalPath ) {
   logger.warn(`Route ${path} of ${originalPath} not found.`);
+}
+
+function dynamicSplit ( path, splitKey ) {
+
+  let output = {};
+
+  // Remove the first element as it's just empty
+  splitKey.shift();
+
+  for( let i = 0, ii = splitKey.length; i < ii; i++){
+
+    output[splitKey[i].replace(/\//g, '')] = path.match(/[^\/]*/g)[i !== 0 ? i + i: i];
+
+  }
+
 }
 
 function resolve ( path ) {
@@ -49,8 +64,18 @@ function resolve ( path ) {
 
       if ( key.indexOf(':') > - 1) {
 
-        routeData[key.replace(':', '')] = path.match(/[^\/]*/)[0];
-        dynamicKey = /[^\/]*/;
+        let splitKey = key.split(':');
+
+        if ( splitKey.length > 2 ) {
+
+          routeData = dynamicSplit( path, splitKey );
+
+        } else {
+
+          routeData[key.replace(':', '')] = path.match(/[^\/]*/)[0];
+          dynamicKey = /[^\/]*/;
+
+        }
 
       }
 
@@ -61,7 +86,7 @@ function resolve ( path ) {
 
       }
 
-      matchedParent = path.match( dynamicKey || key );
+      matchedParent = path.match('^' + (dynamicKey || key ));
 
       isFinal = matchedParent &&
                   path.replace( matchedParent[0], '' )
@@ -130,11 +155,14 @@ function traverse( parents, routeObject ) {
 
     for ( let key in pointer ) {
 
-      let matchedParent = parents.match( key );
+      let matchedParent = parents.match('^' + key );
 
       if ( parents.length && matchedParent ) {
 
-        parents = parents.replace(matchedParent[0], '');
+        parents = parents.replace(matchedParent[0], '')
+                        .replace(/^\//, '')
+                        .replace(/\/$/, '');
+
         createPointer = pointer[key];
         pointer = pointer[key].childRoutes || pointer[key];
 

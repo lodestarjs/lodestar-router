@@ -1,3 +1,7 @@
-let routes = {};
+let routes = {},
+  privateConfig = {
+    usingMap: '',
+    listenerActive: false
+  };
 
-export { routes }
+export { routes, privateConfig }

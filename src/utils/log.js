@@ -3,11 +3,11 @@ import { config } from '../config/defaults';
 
 const logger =  {};
 
-logger.debug = function () { if( hasConsole && config.debug ) console.debug.apply(console, arguments); }
+logger.debug = function () { if( hasConsole && config.debug ) console.debug.apply(console, arguments); };
 
-logger.log   = function () { if( hasConsole && config.debug ) console.log.apply(console, arguments); }
+logger.log   = function () { if( hasConsole && config.debug ) console.log.apply(console, arguments); };
 
-logger.warn  = function () { if( hasConsole && config.debug ) console.warn.apply(console, arguments); }
+logger.warn  = function () { if( hasConsole && config.debug ) console.warn.apply(console, arguments); };
 
 
 let routerIntro = [`LodestarJs-Router <@version@> in debug mode.`];

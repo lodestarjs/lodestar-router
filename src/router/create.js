@@ -1,8 +1,11 @@
 import { getParent, formatRoute } from '../utils/format';
-import { routes } from './globals';
-import { traverse } from './search'
+import { routes, privateConfig } from './globals';
+import { traverse } from './search';
+import { listener } from './listener';
 
 function map( routeObject ) {
+
+  if ( privateConfig.usingMap === false ) throw new Error('Do not use map() as well as createRoute().');
 
   for ( let key in routeObject ) {
 
@@ -10,11 +13,15 @@ function map( routeObject ) {
 
   }
 
+  privateConfig.usingMap = true;
+
 }
 
 function createRoute( routeObject ) {
 
-  if ( !routeObject ) throw new Error('No route object defined.')
+  if ( privateConfig.usingMap === true ) throw new Error('Do not use createRoute() as well as map().');
+
+  if ( !routeObject ) throw new Error('No route object defined.');
 
   if ( !routeObject.path ) throw new Error('Please define the route to use.');
 
@@ -35,6 +42,8 @@ function createRoute( routeObject ) {
     routes[routeObject.path].controller = routeObject.controller;
 
   }
+
+  privateConfig.usingMap = false;
 
 }
 
