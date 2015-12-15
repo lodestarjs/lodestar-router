@@ -1,4 +1,5 @@
 .DS_Store
 .gobble
+.gobble-build
 coverage
 node_modules
