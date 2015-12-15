@@ -1,4 +1,4 @@
-import { routes } from './globals.js';
+import { routes } from '../config/defaults';
 import { copy } from '../utils/object';
 
 function getRoutes() {

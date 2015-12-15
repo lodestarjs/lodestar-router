@@ -1,4 +1,4 @@
-import { routes } from './globals';
+import { routes } from '../config/defaults';
 import { formatRoute } from '../utils/format';
 import { logger } from '../utils/log';
 

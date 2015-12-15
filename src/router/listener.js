@@ -1,6 +1,5 @@
 import { hasHistory, hasEventListener } from '../config/environment';
-import { config } from '../config/defaults';
-import { privateConfig } from './globals';
+import { config, privateConfig } from '../config/defaults';
 import { logger } from '../utils/log';
 import { resolve } from '../router/search';
 import { formatRoute as format } from '../utils/format';

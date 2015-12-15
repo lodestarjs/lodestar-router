@@ -1,5 +1,5 @@
 import { getParent, formatRoute } from '../utils/format';
-import { routes, privateConfig } from './globals';
+import { routes, privateConfig } from '../config/defaults';
 import { traverse } from './search';
 import { listener } from './listener';
 
