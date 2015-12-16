@@ -84,7 +84,7 @@ function listener() {
 
     if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listening for hash changes.');
 
-    windowListener(hasEventListener ? 'hashchange' : 'onhashchange', () => { resolve( formatRoute.call( this, window.location.hash ) ); } );
+    windowListener(hasEventListener ? 'hashchange' : 'onhashchange', () => { this.resolve( formatRoute.call( this, window.location.hash ) ); } );
 
   } else if ( this.config.useHistory && hasHistory ) {
 
