@@ -17,8 +17,8 @@ Hello, you are running the LodestarJs Router <@version@> in debug mode.
 This will help you to identify any problems in your application.
 
 DEBUG mode is a global option, to disable debug mode will disable it for each
-instance. You can either call the method when declaring a new instance simply
-disable it there. For example, new Router({DEBUG: false});
+instance. You can disable it when declaring a new instance. For example,
+new Router({DEBUG: false});
 
 For documentation head to the wiki:
   https://github.com/lodestarjs/lodestar-router/wiki
