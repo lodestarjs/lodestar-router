@@ -31,6 +31,7 @@
     "rollup-plugin-babel": "^2.2.0"
   },
   "scripts": {
+    "start": "./node_modules/.bin/gobble",
     "build": "rm -r dist && ./node_modules/.bin/gobble build dist",
     "test": "./node_modules/.bin/karma start",
     "lint": "node node_modules/eslint/bin/eslint src/",

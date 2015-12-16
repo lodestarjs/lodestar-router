@@ -4,7 +4,6 @@ _A standalone router, which will also used within the lodestar MVC._
 
 **This router is currently in development and as such may not be ready for full production usage.**
 
-
 ## Starting out
 
 After including the router in your project, declare a new instance of it. While creating a new instance, you can optionally pass it some config options to control how your router should behave, [see config](#configuration).
@@ -172,3 +171,15 @@ router.notFound(function(){
   console.log('Uh-oh looks like this route doesn\'t exist :/');
 });
 ```
+
+## Build Project
+
+For this project we are using Gobble as the build tool.
+
+To build the dist of the project you can run `npm build` which runs the `gobble build dist` task.
+
+To develop with the Router you can run `npm start` which runs the `gobble` task.
+
+## Tests
+
+For this project we are using Mocha and Chai to write the tests. These tests are then being ran with karma and PhantomJS so that the tests can work with the ES6 code and in the browser.
