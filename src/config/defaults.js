@@ -12,7 +12,11 @@ let globals = {
   };
 
 
-
+/**
+ * This initialises the config for each instance with a fresh config
+ * @param  {Object} _this, this passed in from the constructore
+ * @return {Void}, nothing returned
+ */
 function initConfig( _this ) {
 
   _this.routes = {};
@@ -20,6 +24,12 @@ function initConfig( _this ) {
 
 }
 
+/**
+ * Modifies the config for an instance
+ * @param  {Object} _this, this passed in from the constructore
+ * @param  {Object} changes, the changes the user wants to make to the config.
+ * @return {Void}, nothing returned
+ */
 function modifyConfig( _this, changes ) {
 
   if ( changes ) {
@@ -31,6 +41,8 @@ function modifyConfig( _this, changes ) {
     _this.config = extend({}, [ _this.config, changes ], true);
 
   }
+
+  return _this.config;
 
 }
 

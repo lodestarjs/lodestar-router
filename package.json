@@ -9,6 +9,7 @@
     "babel-preset-es2015-rollup": "^1.0.0",
     "chai": "^3.4.1",
     "codecov.io": "^0.1.6",
+    "cz-conventional-changelog": "^1.1.5",
     "gobble": "^0.10.2",
     "gobble-babel": "^5.5.8",
     "gobble-eslint": "^0.1.0",
@@ -29,7 +30,7 @@
   },
   "scripts": {
     "build": "rm -r dist && gobble build dist",
-    "test": "NODE_ENV=tests ./node_modules/mocha/bin/_mocha test --compilers js:babel-core/register",
+    "test": "./node_modules/.bin/karma start",
     "coverage": "NODE_ENV=tests ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/babel-istanbul cover ./node_modules/mocha/bin/_mocha",
     "codecov": "rm -r coverage && npm run coverage && cat ./coverage/lcov/lcov.info | ./node_modules/.bin/codecov"
   },
@@ -43,5 +44,10 @@
   "bugs": {
     "url": "https://github.com/lodestarjs/lodestar-router/issues"
   },
-  "homepage": "https://github.com/lodestarjs/lodestar-router#readme"
+  "homepage": "https://github.com/lodestarjs/lodestar-router#readme",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }

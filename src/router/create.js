@@ -2,6 +2,11 @@ import { getParent, formatRoute } from '../utils/format';
 import { traverse } from './search';
 import { listener } from './listener';
 
+/**
+ * The bare bones-way of creating a routing object
+ * @param  {Object} routeObject, the route object as the Router expects it
+ * @return {Void}, nothing returned
+ */
 function map( routeObject ) {
 
   if ( this.config.usingMap === false ) throw new Error('Do not use map() as well as createRoute().');
@@ -18,6 +23,11 @@ function map( routeObject ) {
 
 }
 
+/**
+ * The nicer way of creating a route filled with validation, may take longer than map().
+ * @param  {Object} routeObject, an object that the Router will translate into an object it can understand
+ * @return {Void}, nothing returned
+ */
 function createRoute( routeObject ) {
 
   if ( this.config.usingMap === true ) throw new Error('Do not use createRoute() as well as map().');

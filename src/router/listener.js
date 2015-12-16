@@ -4,7 +4,11 @@ import { logger } from '../utils/log';
 import { resolve } from '../router/search';
 import { formatRoute } from '../utils/format';
 
-
+/**
+ * Removes the origin from the link, for those who are using absolute links..
+ * @param  {String} link, the link to have the origin removed from it.
+ * @return {String}, the link with the origin removed.
+ */
 function removeOrigin ( link ) {
 
   if (!window.location.origin) {
@@ -15,6 +19,12 @@ function removeOrigin ( link ) {
 
 }
 
+/**
+ * Traverses through the parent nodes to look for an Anchor tag.
+ * Used in historyMode.
+ * @param  {HTMLElement} target, the element to begin traversing from.
+ * @return {Boolean|HTMLElement} returns false or the found element.
+ */
 function checkParents( target ) {
 
   while (target) {
@@ -26,13 +36,15 @@ function checkParents( target ) {
     target = target.parentNode;
   }
 
-  if ( this.config.loggingLevel = 'HIGH') logger.warn('No anchor tag found.');
-
   return false;
 
 }
 
-
+/**
+ * On click, finds the anchor tag formats the link and returns it.
+ * @param  {Event} e, the event passed through from the click event.
+ * @return {String} returns the formatted href for this link
+ */
 function historyClick( e ) {
 
   e = window.e || e;
@@ -52,6 +64,10 @@ function historyClick( e ) {
 
 }
 
+/**
+ * This sets up the events for 'Hashchange' and 'History' mode depending on what has been selected and what is available.
+ * @return {Void}, nothing returned
+ */
 function listener() {
 
   if ( this.config.listenerActive ) return;
@@ -68,15 +84,14 @@ function listener() {
 
     if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listening for hash changes.');
 
-    windowListener(hasEventListener ? 'hashchange' : 'onhashchange', function() { resolve( formatRoute.call( this, window.location.hash ) ); } );
-
+    windowListener(hasEventListener ? 'hashchange' : 'onhashchange', () => { resolve( formatRoute.call( this, window.location.hash ) ); } );
 
   } else if ( this.config.useHistory && hasHistory ) {
 
     if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listening for clicks or popstate.');
 
-    docListener('click', function() { this.resolve( historyClick() ); } );
-    windowListener('popstate', function() { this.resolve( formatRoute.call( this, window.location.pathname )); } );
+    docListener('click',(e) => { this.resolve( historyClick.call( this, e ) ); } );
+    windowListener('popstate',() => { this.resolve( formatRoute.call( this, window.location.pathname )); } );
 
   }
 

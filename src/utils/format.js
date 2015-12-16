@@ -1,3 +1,8 @@
+/**
+ * Format the route to a standard that the Router can understand
+ * @param  {String} route, the route to format
+ * @return {String}, the formatted route
+ */
 function formatRoute( route ) {
 
   if(route === '') {
@@ -15,6 +20,11 @@ function formatRoute( route ) {
 
 }
 
+/**
+ * For createRoute() grab the parent specified in the []
+ * @param  {String} url, the route to find a parent in
+ * @return {String}, the parent URL
+ */
 function getParent( url ) {
   let begin = url.indexOf('[') + 1,
       end = url.indexOf(']');

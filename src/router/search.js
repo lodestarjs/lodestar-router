@@ -1,49 +1,19 @@
 import { logger } from '../utils/log';
+import { pageNotFound } from '../utils/route';
+import { clearCache, dynamicSplit } from '../utils/route';
 
-
-function clearCache ( key, pointer ) {
-
-  let props = Object.getOwnPropertyNames(pointer);
-
-  for (let i = 0, ii = props.length; i < ii; i++) {
-
-    if (props[i] !== key) {
-
-      pointer[props[i]].active = false;
-
-      if ( pointer[props[i]].childRoutes ) {
-
-        clearCache(false, pointer[props[i]].childRoutes);
-
-      }
-
-    }
-
-  }
-
-}
-
-function notFound ( path, originalPath ) {
-  logger.warn(`Route ${path} of ${originalPath} not found.`);
-}
-
-function dynamicSplit ( path, splitKey ) {
-
-  let output = {};
-
-  splitKey.shift();
-
-  for( let i = 0, ii = splitKey.length; i < ii; i++){
-
-    output[splitKey[i].replace(/\//g, '')] = path.match(/[^\/]*/g)[i !== 0 ? i + i: i];
-
-  }
-
-  return output;
-
-}
-
+/**
+ * This goes through the entire routing tree, executing the matching paths.
+ *
+ * It also makes use of caching as in that it will only need to execute the
+ * paths that are necessary.
+ *
+ * @param  {String} path, the current path that we are on
+ * @return {Void}, nothing returned
+ */
 function resolve ( path ) {
+
+  if ( !path ) return;
 
   let pointer = this.routes,
     originalPath = path,
@@ -55,16 +25,19 @@ function resolve ( path ) {
 
     let routeData = {};
 
+    // For each child of the current pointer which is some child of routes
     for ( let key in pointer ) {
 
       let dynamicKey = false;
 
       keyCache = key;
 
+      // If contains : then it has dynamic segments
       if ( key.indexOf(':') > - 1) {
 
         let splitKey = key.split(':');
 
+        // If there are more : than expected then there are multiple dynamic segments
         if ( splitKey.length > 2 ) {
 
           routeData = dynamicSplit( path, splitKey );
@@ -79,6 +52,7 @@ function resolve ( path ) {
 
       }
 
+      // If contains * then there is a wildcard segment
       if ( key.match(/\*[a-z]+/i) ) {
 
         routeData[key.replace(/\*[a-z]+/i, '')] = path.match(/.*/)[0].split('/');
@@ -88,6 +62,7 @@ function resolve ( path ) {
 
       matchedParent = path.match('^' + (dynamicKey || key ));
 
+      // Find out if we're on the final run
       isFinal = matchedParent &&
                   path.replace( matchedParent[0], '' )
                   .replace(/^\//, '')
@@ -95,7 +70,7 @@ function resolve ( path ) {
 
       if( path.length && matchedParent ) {
 
-
+        // If it's not the final run and the current route is not active, execute it
         if ( !pointer[ key ].active && !isFinal ) {
 
           pointer[ key ].routeData = routeData;
@@ -104,20 +79,22 @@ function resolve ( path ) {
 
         }
 
+        // Remove current part from the path
         path = path.replace( matchedParent[0], '' )
                   .replace(/^\//, '')
                   .replace(/\/$/, '');
 
+        // Remove active from siblings and their children
         if ( pointer[key] ) clearCache( key, pointer );
 
-
+        // If it is not final then re-assign the pointer
         if ( pointer[key].childRoutes && !isFinal ) {
 
           pointer = pointer[ key ].childRoutes;
 
         } else if ( !isFinal ) {
 
-          notFound( path, originalPath );
+          pageNotFound.call( this, path, originalPath );
           path = '';
 
         }
@@ -128,6 +105,7 @@ function resolve ( path ) {
 
     }
 
+    // If it's the final page, re-execute it and set to active
     if ( isFinal ) {
 
       pointer[ keyCache ].routeData = routeData;
@@ -136,7 +114,7 @@ function resolve ( path ) {
 
     } else if ( !matchedParent ) {
 
-      notFound( path, originalPath );
+      pageNotFound.call( this, path, originalPath );
       path = '';
       break;
 
@@ -146,6 +124,14 @@ function resolve ( path ) {
 
 }
 
+
+/**
+ * Used in createRoute to map a routing object to a parent in a way
+ * that the Router can understand it.
+ * @param  {String} parents, the parent path
+ * @param  {Object} routeObject, the object to add as a child
+ * @return {Void}, nothing returned
+ */
 function traverse( parents, routeObject ) {
 
   let pointer = this.routes,

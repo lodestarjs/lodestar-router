@@ -28,7 +28,12 @@ If you have found any bugs, create an issue for us:
 
 `;
 
-function welcome() {
+/**
+ * The welcome function gives a message to the user letting the know
+ * some key things about the Router.
+ * @return {Void}, nothing returned
+ */
+function welcome () {
 
   if (hasConsole && globals.DEBUG ) {
 
@@ -44,4 +49,14 @@ function welcome() {
 
 }
 
-export { logger, welcome }
+/**
+ * Logs the route that has not been found.
+ * @param  {String} path, the child of the parent route to watch.
+ * @param  {String} originalPath, the original path
+ * @return {Void}, nothing returned
+ */
+function notFoundLog ( path, originalPath ) {
+  logger.warn(`Route ${path} of ${originalPath} not found.`);
+}
+
+export { logger, welcome, notFoundLog }

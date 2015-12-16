@@ -19,19 +19,19 @@ The available options to configure are the following with their defaults:
 
 ```
 {
+  DEBUG: true,
   useHistory: false,
-  debug: true,
   loggingLevel: 'LOW'
 }
 ```
 
+#### DEBUG - Global
+
+This option will log all of the issues that the lodestar-router encounters. By default this will only log a minimal amount of issues i.e. the important ones. By saying that this option is global we mean that setting the DEBUG option will manually configure all instance of the Router.
+
 #### useHistory
 
 If this is set to true, then if the History API is available then the hash will be removed from the url and use pushState to put the current state into the URL.
-
-#### debug
-
-This option will log all of the issues that the lodestar-router encounters. By default this will only log a minimal amount of issues i.e. the important ones.
 
 #### loggingLevel
 
@@ -155,5 +155,20 @@ router.map({
      }
 
   }
+});
+```
+
+### Route not found
+
+After you have declared your route, you may also want to have a function that executes when you stumble across a page that is not found, like a 404.
+
+To create a 404 function, all you need to do is use the notFound() function provided by the router.
+
+**Example**
+```
+var router = new Router();
+
+router.notFound(function(){
+  console.log('Uh-oh looks like this route doesn\'t exist :/');
 });
 ```
