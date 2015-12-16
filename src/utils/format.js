@@ -27,10 +27,10 @@ function formatRoute( route ) {
  */
 function getParent( url ) {
   let begin = url.indexOf('[') + 1,
-      end = url.indexOf(']');
+    end = url.indexOf(']');
   return url.substring(begin, end);
 }
 
 
 
-export { formatRoute, getParent }
+export { formatRoute, getParent };

@@ -10,5 +10,5 @@ function getRoutes() {
 
 }
 
-export { getRoutes }
+export { getRoutes };
 
