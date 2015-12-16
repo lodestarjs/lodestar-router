@@ -34,6 +34,13 @@ This option will log all of the issues that the lodestar-router encounters. By d
 
 If this is set to true, then if the History API is available then the hash will be removed from the url and use pushState to put the current state into the URL.
 
+If you are not using history, in your HTML, you will have to link to pages by having the hash present in the href.
+
+**Example**
+```
+<a href="#/blog">To the blog!</a>
+```
+
 #### loggingLevel
 
 By default this is set to LOW, so it will only tell you about the issues that we feel you should know. However, if this is set to HIGH then everything in the Router will be logged.
