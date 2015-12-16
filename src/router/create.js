@@ -34,7 +34,7 @@ function createRoute( routeObject ) {
 
     parentUrls = getParent(routeObject.path);
 
-    traverse( parentUrls, routeObject );
+    traverse.call( this, parentUrls, routeObject );
 
   } else {
 

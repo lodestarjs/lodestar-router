@@ -1,10 +1,8 @@
 import { formatRoute, getParent  } from '../../src/utils/format';
-import { assert, expect } from 'chai';
 
+describe('format', () => {
 
-describe('format', function() {
-
-  describe('formatRoute()', function() {
+  describe('formatRoute()', () => {
 
     var testUrls = [{
       test: '',
@@ -20,11 +18,11 @@ describe('format', function() {
       expected: '/index'
     }];
 
-    testUrls.forEach(function(test) {
+    testUrls.forEach( (test) => {
 
-      it('should correctly format the route ' + test.test + ' as ' + test.expected, function() {
+      it('should correctly format the route ' + test.test + ' as ' + test.expected, () => {
 
-        assert(formatRoute(test.test) === test.expected, test.test + ' does not equal ' + test.expected);
+        assert(formatRoute.call({ config: { basePath: ''} }, test.test) === test.expected, test.test + ' does not equal ' + test.expected);
 
       });
 

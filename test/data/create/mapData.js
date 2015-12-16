@@ -1,20 +1,20 @@
 export default {
   '/' : {
 
-     controller: function() { console.log('index'); },
+     controller: function() {  },
      childRoutes: {
 
         'home': {
 
-           controller: function() { console.log('home'); },
+           controller: function() {  },
 
            childRoutes: {
 
               ':id': {
-                controller: function() { console.log(':id'); },
+                controller: function() {  },
                 childRoutes: {
                   '*any': {
-                    controller: function() { console.log('*any'); }
+                    controller: function() {  }
                   }
                 }
 

@@ -1,4 +1,4 @@
-import { fullExtend as extend, merge } from '../utils/object.js';
+import { fullExtend as extend, merge, copy } from '../utils/object.js';
 
 let globals = {
     DEBUG: true
@@ -24,7 +24,7 @@ function modifyConfig( _this, changes ) {
 
   if ( changes ) {
 
-    if ( changes.DEBUG ) globals.DEBUG = changes.DEBUG; delete changes.DEBUG;
+    if ( typeof changes.DEBUG !== 'undefined' ) globals = copy({} , { DEBUG: changes.DEBUG }); delete changes.DEBUG;
 
     if ( changes.loggingLevel) changes.loggingLevel = changes.loggingLevel.toUpperCase();
 
