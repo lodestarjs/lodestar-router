@@ -5,6 +5,7 @@ _A standalone router, which will also used within the lodestar MVC._
 **This router is currently in development and as such may not be ready for full production usage.**
 
 [![Build Status](https://travis-ci.org/lodestarjs/lodestar-router.svg)](https://travis-ci.org/lodestarjs/lodestar-router)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 ## Starting out
 
@@ -173,6 +174,15 @@ router.notFound(function(){
   console.log('Uh-oh looks like this route doesn\'t exist :/');
 });
 ```
+
+## Contributing
+
+If you want to contribute to the project we have a few requests for you to follow.
+
+- Use JSDoc to document any functions created
+- Use Commitizen for commits
+- Write tests for anything that you implement
+- Make sure that ESLint passes by using `npm run lint`
 
 ## Build Project
 
