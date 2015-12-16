@@ -66,4 +66,4 @@ function createRoute( routeObject ) {
 
 }
 
-export { map, createRoute }
+export { map, createRoute };

@@ -10,8 +10,10 @@
     "chai": "^3.4.1",
     "codecov.io": "^0.1.6",
     "cz-conventional-changelog": "^1.1.5",
+    "eslint": "^1.10.3",
     "gobble": "^0.10.2",
     "gobble-babel": "^5.5.8",
+    "gobble-cli": "^0.6.0",
     "gobble-eslint": "^0.1.0",
     "gobble-rollup": "^0.11.0",
     "gobble-rollup-babel": "^0.6.1",
@@ -29,8 +31,9 @@
     "rollup-plugin-babel": "^2.2.0"
   },
   "scripts": {
-    "build": "rm -r dist && gobble build dist",
+    "build": "rm -r dist && ./node_modules/.bin/gobble build dist",
     "test": "./node_modules/.bin/karma start",
+    "lint": "node node_modules/eslint/bin/eslint src/",
     "coverage": "NODE_ENV=tests ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/babel-istanbul cover ./node_modules/mocha/bin/_mocha",
     "codecov": "rm -r coverage && npm run coverage && cat ./coverage/lcov/lcov.info | ./node_modules/.bin/codecov"
   },

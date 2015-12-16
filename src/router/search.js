@@ -173,4 +173,4 @@ function traverse( parents, routeObject ) {
 
 }
 
-export { traverse, resolve }
+export { traverse, resolve };
