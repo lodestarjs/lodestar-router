@@ -4,6 +4,8 @@ _A standalone router, which will also used within the lodestar MVC._
 
 **This router is currently in development and as such may not be ready for full production usage.**
 
+[![Build Status](https://travis-ci.org/lodestarjs/lodestar-router.svg)](https://travis-ci.org/lodestarjs/lodestar-router)
+
 ## Starting out
 
 After including the router in your project, declare a new instance of it. While creating a new instance, you can optionally pass it some config options to control how your router should behave, [see config](#configuration).
