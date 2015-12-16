@@ -1,5 +1,5 @@
 import { hasConsole, hasCollapsedConsole } from '../config/environment';
-import { globals } from '../config/defaults'
+import { globals } from '../config/defaults';
 
 const logger =  {};
 
@@ -59,4 +59,4 @@ function notFoundLog ( path, originalPath ) {
   logger.warn(`Route ${path} of ${originalPath} not found.`);
 }
 
-export { logger, welcome, notFoundLog }
+export { logger, welcome, notFoundLog };

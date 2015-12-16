@@ -61,4 +61,4 @@ function isObject( val ) {
   return val !== null && typeof val === 'object';
 }
 
-export { fullExtend, merge, copy, isObject }
+export { fullExtend, merge, copy, isObject };
