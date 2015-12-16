@@ -1,5 +1,3 @@
-import { config } from '../config/defaults';
-
 function formatRoute( route ) {
 
   if(route === '') {
@@ -9,8 +7,8 @@ function formatRoute( route ) {
   route = route.replace(/^(\/?[\#\!\?]+)/, '')
               .replace(/$\//, '');
 
-  if ( config.basePath.length ) {
-    route.replace( config.basePath, '');
+  if ( this.config.basePath.length ) {
+    route.replace( this.config.basePath, '');
   }
 
   return route;

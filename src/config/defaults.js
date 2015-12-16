@@ -1,40 +1,37 @@
 import { fullExtend as extend, merge } from '../utils/object.js';
 
-let routes = {},
-  config = defaultConfig = {
-    useHistory: false,
-    debug: true,
-    basePath: '',
-    logTransitions: false,
-    loggingLevel: 'LOW' // options are LOW or HIGH
+let globals = {
+    DEBUG: true
   },
-  privateConfig = defaultPrivate = {
+  defaultConfig = {
+    useHistory: false,
+    basePath: '',
+    loggingLevel: 'LOW', // options are LOW or HIGH
     usingMap: '',
     listenerActive: false
   };
 
 
 
-function initConfig() {
+function initConfig( _this ) {
 
-  config = merge({}, defaultConfig);
-  privateConfig = merge({}, defaultPrivate);
-
-}
-
-
-function modifyPrivate( changes ) {
-
-  if ( changes )
-    privateConfig = extend({}, [ privateConfig, changes ], true);
+  _this.routes = {};
+  _this.config = merge( {}, defaultConfig );
 
 }
 
-function modifyConfig( changes ) {
+function modifyConfig( _this, changes ) {
 
-  if ( changes )
-    config = extend({}, [ config, changes ], true);
+  if ( changes ) {
+
+    if ( changes.DEBUG ) globals.DEBUG = changes.DEBUG; delete changes.DEBUG;
+
+    if ( changes.loggingLevel) changes.loggingLevel = changes.loggingLevel.toUpperCase();
+
+    _this.config = extend({}, [ _this.config, changes ], true);
+
+  }
 
 }
 
-export { config, modifyConfig, routes, privateConfig, modifyPrivate, initConfig };
+export { modifyConfig, initConfig, globals };

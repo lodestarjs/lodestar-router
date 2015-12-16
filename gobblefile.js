@@ -18,7 +18,7 @@ lib = gobble([
     })
 ]);
 
-
 module.exports = gobble([
-  lib
+  lib,
+  lib.transform( 'uglifyjs', { ext: '.min.js' })
 ]);

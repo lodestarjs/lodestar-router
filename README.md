@@ -21,8 +21,7 @@ The available options to configure are the following with their defaults:
 {
   useHistory: false,
   debug: true,
-  loggingLevel: 'LOW',
-  logTransitions: false
+  loggingLevel: 'LOW'
 }
 ```
 
@@ -38,9 +37,6 @@ This option will log all of the issues that the lodestar-router encounters. By d
 
 By default this is set to LOW, so it will only tell you about the issues that we feel you should know. However, if this is set to HIGH then everything in the Router will be logged.
 
-#### logTransitions
-
-Perhaps an over the top option, but it may be useful to some. This options will log the transition to each page. I.e. if you go form the index page `'/'` to the blog page `'/blog'`. Then you will be told `Transitioned from '/' to '/blog'.`
 
 ## Creating a route
 

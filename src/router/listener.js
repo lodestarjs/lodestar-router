@@ -1,8 +1,8 @@
 import { hasHistory, hasEventListener } from '../config/environment';
-import { config, privateConfig } from '../config/defaults';
+import { config, privateConfig, modifyPrivate } from '../config/defaults';
 import { logger } from '../utils/log';
 import { resolve } from '../router/search';
-import { formatRoute as format } from '../utils/format';
+import { formatRoute } from '../utils/format';
 
 
 function removeOrigin ( link ) {
@@ -26,7 +26,7 @@ function checkParents( target ) {
     target = target.parentNode;
   }
 
-  if ( config.loggingLevel = 'HIGH') logger.warn('No anchor tag found.');
+  if ( this.config.loggingLevel = 'HIGH') logger.warn('No anchor tag found.');
 
   return false;
 
@@ -48,40 +48,40 @@ function historyClick( e ) {
 
   if (anchorLink === '_blank' || (anchorLink.indexOf(':') > -1 && !anchorLink.match(/(?:https?|s?ftp):/))) return;
 
-  return format( removeOrigin( anchorLink ) );
+  return formatRoute.call( this, removeOrigin( anchorLink ) );
 
 }
 
 function listener() {
 
-  if ( privateConfig.listenerActive ) return;
+  if ( this.config.listenerActive ) return;
 
-  if ( config.loggingLevel === 'HIGH' ) logger.debug('Listener is now active.');
+  if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listener is now active.');
 
   let windowListener = hasEventListener ? window.addEventListener : window.attachEvent,
     docListener = hasEventListener ? document.addEventListener : document.attachEvent,
-    initialLink = config.useHistory && hasHistory ? window.location.pathname : window.location.hash;
+    initialLink = this.config.useHistory && hasHistory ? window.location.pathname : window.location.hash;
 
-  privateConfig.listenerActive = true;
+  this.config.listenerActive = true;
 
-  if ( !config.useHistory || !hasHistory ) {
+  if ( !this.config.useHistory || !hasHistory ) {
 
-    if ( config.loggingLevel === 'HIGH' ) logger.debug('Listening for hash changes.');
+    if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listening for hash changes.');
 
-    windowListener(hasEventListener ? 'hashchange' : 'onhashchange', function() { resolve( format( window.location.hash ) ); } );
+    windowListener(hasEventListener ? 'hashchange' : 'onhashchange', function() { resolve( formatRoute.call( this, window.location.hash ) ); } );
 
 
-  } else if ( config.useHistory && hasHistory ) {
+  } else if ( this.config.useHistory && hasHistory ) {
 
-    if ( config.loggingLevel === 'HIGH' ) logger.debug('Listening for clicks or popstate.');
+    if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listening for clicks or popstate.');
 
-    docListener('click', function() { resolve( historyClick() ); } );
-    windowListener('popstate', function() { resolve( format( window.location.pathname )); } );
+    docListener('click', function() { this.resolve( historyClick() ); } );
+    windowListener('popstate', function() { this.resolve( formatRoute.call( this, window.location.pathname )); } );
 
   }
 
   // Fire the initial page load link
-  resolve( format( initialLink ) );
+  this.resolve( formatRoute.call( this, initialLink ) );
 
 }
 

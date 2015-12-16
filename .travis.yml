@@ -3,5 +3,3 @@ node_js:
   - "4.1"
 install:
   - npm install
-script:
-  - npm run codecov

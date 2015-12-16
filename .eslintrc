@@ -29,7 +29,8 @@
     "prefer-const": 2,
     "prefer-template": 2,
     "no-const-assign": 2,
-    "object-shorthand": 2
+    "object-shorthand": 2,
+    "prefer-arrow-callback": 2
   },
   "env": {
     "es6": true,

@@ -1,27 +1,26 @@
 import { getParent, formatRoute } from '../utils/format';
-import { routes, privateConfig } from '../config/defaults';
 import { traverse } from './search';
 import { listener } from './listener';
 
 function map( routeObject ) {
 
-  if ( privateConfig.usingMap === false ) throw new Error('Do not use map() as well as createRoute().');
+  if ( this.config.usingMap === false ) throw new Error('Do not use map() as well as createRoute().');
 
   for ( let key in routeObject ) {
 
-    routes[key] = routeObject[key];
+    this.routes[key] = routeObject[key];
 
   }
 
-  privateConfig.usingMap = true;
+  this.config.usingMap = true;
 
-  listener();
+  listener.call(this);
 
 }
 
 function createRoute( routeObject ) {
 
-  if ( privateConfig.usingMap === true ) throw new Error('Do not use createRoute() as well as map().');
+  if ( this.config.usingMap === true ) throw new Error('Do not use createRoute() as well as map().');
 
   if ( !routeObject ) throw new Error('No route object defined.');
 
@@ -39,22 +38,21 @@ function createRoute( routeObject ) {
 
   } else {
 
-    routeObject.path = formatRoute(routeObject.path);
-    routes[routeObject.path] = {};
-    routes[routeObject.path].controller = routeObject.controller;
+    routeObject.path = formatRoute.call(this, routeObject.path);
+    this.routes[routeObject.path] = {};
+    this.routes[routeObject.path].controller = routeObject.controller;
 
   }
 
-  if ( privateConfig.usingMap === '' ) {
+  if ( this.config.usingMap === '' ) {
 
-    // Push to the end of the Queue
-    setTimeout( function() {
-      listener();
+    setTimeout(() => {
+      listener.call( this );
     }, 0);
 
   }
 
-  privateConfig.usingMap = false;
+  this.config.usingMap = false;
 
 }
 

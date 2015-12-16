@@ -1,5 +1,3 @@
-import { routes } from '../config/defaults';
-import { formatRoute } from '../utils/format';
 import { logger } from '../utils/log';
 
 
@@ -47,7 +45,7 @@ function dynamicSplit ( path, splitKey ) {
 
 function resolve ( path ) {
 
-  let pointer = routes,
+  let pointer = this.routes,
     originalPath = path,
     isFinal = false,
     keyCache = '',
@@ -150,7 +148,7 @@ function resolve ( path ) {
 
 function traverse( parents, routeObject ) {
 
-  let pointer = routes,
+  let pointer = this.routes,
     createPointer = {};
 
   while ( parents.length ) {
