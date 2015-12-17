@@ -32,7 +32,7 @@
   },
   "scripts": {
     "start": "./node_modules/.bin/gobble",
-    "build": "rm -r dist && ./node_modules/.bin/gobble build dist",
+    "build": "./node_modules/.bin/gobble build dist -f",
     "test": "./node_modules/.bin/karma start",
     "lint": "node node_modules/eslint/bin/eslint src/",
     "coverage": "NODE_ENV=tests ./node_modules/babel-cli/bin/babel-node.js ./node_modules/.bin/babel-istanbul cover ./node_modules/mocha/bin/_mocha",

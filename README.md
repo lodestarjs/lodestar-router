@@ -195,9 +195,9 @@ If you want to contribute to the project we have a few requests for you to follo
 
 For this project we are using Gobble as the build tool.
 
-To build the dist of the project you can run `npm build` which runs the `gobble build dist` task.
+To build the dist of the project you can run `npm run build` which runs the `gobble build dist` task.
 
-To develop with the Router you can run `npm start` which runs the `gobble` task.
+To develop with the Router you can run `npm run start` which runs the `gobble` task.
 
 ## Tests
 
