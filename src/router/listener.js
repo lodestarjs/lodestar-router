@@ -72,7 +72,7 @@ function historyClick( e ) {
 
   e.preventDefault();
 
-  return formattedRoute;
+  return formattedRoute === '' ? '/' : formattedRoute;
 
 }
 
@@ -104,7 +104,13 @@ function listener() {
 
     if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listening for clicks or popstate.');
 
-    docListener('click',(e) => { this.resolve( historyClick.call( this, e ) ); } );
+    docListener('click',(e) => {
+      let historyLink = historyClick.call(_this, e);
+
+      if ( historyLink ) {
+        this.resolve(historyLink);
+      }
+    });
     windowListener('popstate',() => { this.resolve( formatRoute.call( this, window.location.pathname )); } );
 
   }
