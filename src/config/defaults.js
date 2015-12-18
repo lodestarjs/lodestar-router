@@ -13,7 +13,9 @@ let globals = {
 
 
 /**
- * This initialises the config for each instance with a fresh config
+ * This initialises the config for each instance with a fresh config,
+ * also adds a global variable to the window which may be used by other libs.
+ *
  * @param  {Object} _this, this passed in from the constructore
  * @return {Void}, nothing returned
  */
@@ -21,6 +23,7 @@ function initConfig( _this ) {
 
   _this.routes = {};
   _this.config = merge( {}, defaultConfig );
+  window.LodeVar = window.LodeVar || {};
 
 }
 
