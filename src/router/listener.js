@@ -50,17 +50,26 @@ function historyClick( e ) {
   e = window.e || e;
 
   let target = e.target,
-    anchorLink = '';
+    anchorLink = '',
+    formattedRoute;
 
-  if (target.tagName !== 'A') target = checkParents( target );
+  if ( target.tagName !== 'A' ) target = checkParents( target );
 
   if ( !target ) return;
 
   anchorLink = target.getAttribute('href');
 
-  if (anchorLink === '_blank' || (anchorLink.indexOf(':') > -1 && !anchorLink.match(/(?:https?|s?ftp):/))) return;
+  if ( anchorLink === '_blank' || (anchorLink.indexOf(':') > -1 && !anchorLink.match(/(?:https?):/)) ) return;
 
-  return formatRoute.call( this, removeOrigin( anchorLink ) );
+  if ( anchorLink.match(/(?:https?):/) && anchorLink.indexOf(window.location.hostname) === -1 ) return;
+
+  formattedRoute = formatRoute.call( this, removeOrigin( anchorLink ) );
+
+  history.pushState(null, null, formattedRoute);
+
+  e.preventDefault();
+
+  return formattedRoute;
 
 }
 

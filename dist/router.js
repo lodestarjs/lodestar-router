@@ -1,8 +1,7 @@
-/* LodestarJS Router - 1.0.0. 
+/* LodestarJS Router - 1.0.1. 
 Author: Dan J Ford 
 Contributors:  
-Published: Thu Dec 17 2015 11:40:37 GMT+0000 (GMT) 
-Commit Hash: none */
+Published: Fri Dec 18 2015 02:21:20 GMT+0000 (GMT)  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -124,8 +123,8 @@ Commit Hash: none */
     if (hasConsole && globals.DEBUG) console.warn.apply(console, arguments);
   };
 
-  var routerIntro = ['LodestarJs-Router 1.0.0 in debug mode.'];
-  var routerMessage = '\n\nHello, you are running the LodestarJs Router 1.0.0 in debug mode.\nThis will help you to identify any problems in your application.\n\nDEBUG mode is a global option, to disable debug mode will disable it for each\ninstance. You can disable it when declaring a new instance. For example,\nnew Router({DEBUG: false});\n\nFor documentation head to the wiki:\n  https://github.com/lodestarjs/lodestar-router/wiki\n\nIf you have found any bugs, create an issue for us:\n  https://github.com/lodestarjs/lodestar-router/issues\n\n';
+  var routerIntro = ['LodestarJs-Router 1.0.1 in debug mode.'];
+  var routerMessage = '\n\nHello, you are running the LodestarJs Router 1.0.1 in debug mode.\nThis will help you to identify any problems in your application.\n\nDEBUG mode is a global option, to disable debug mode will disable it for each\ninstance. You can disable it when declaring a new instance. For example,\nnew Router({DEBUG: false});\n\nFor documentation head to the wiki:\n  https://github.com/lodestarjs/lodestar-router/wiki\n\nIf you have found any bugs, create an issue for us:\n  https://github.com/lodestarjs/lodestar-router/issues\n\n';
 
   /**
    * The welcome function gives a message to the user letting the know
@@ -436,7 +435,8 @@ Commit Hash: none */
     e = window.e || e;
 
     var target = e.target,
-        anchorLink = '';
+        anchorLink = '',
+        formattedRoute = undefined;
 
     if (target.tagName !== 'A') target = checkParents(target);
 
@@ -444,9 +444,17 @@ Commit Hash: none */
 
     anchorLink = target.getAttribute('href');
 
-    if (anchorLink === '_blank' || anchorLink.indexOf(':') > -1 && !anchorLink.match(/(?:https?|s?ftp):/)) return;
+    if (anchorLink === '_blank' || anchorLink.indexOf(':') > -1 && !anchorLink.match(/(?:https?):/)) return;
 
-    return formatRoute.call(this, removeOrigin(anchorLink));
+    if (anchorLink.match(/(?:https?):/) && anchorLink.indexOf(window.location.hostname) === -1) return;
+
+    formattedRoute = formatRoute.call(this, removeOrigin(anchorLink));
+
+    history.pushState(null, null, formattedRoute);
+
+    e.preventDefault();
+
+    return formattedRoute;
   }
 
   /**
