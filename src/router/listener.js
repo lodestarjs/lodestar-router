@@ -89,6 +89,8 @@ function listener() {
 
   this.config.listenerActive = true;
 
+  docListener('click', function (e) { window.LodeVar.previousPath = formatRoute.call( this, removeOrigin( window.location.href )); } );
+
   if ( !this.config.useHistory || !hasHistory ) {
 
     if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listening for hash changes.');
