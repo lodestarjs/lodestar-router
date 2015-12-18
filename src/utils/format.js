@@ -13,7 +13,7 @@ function formatRoute( route ) {
               .replace(/$\//, '');
 
   if ( this.config.basePath.length ) {
-    route.replace( this.config.basePath, '');
+    route = route.replace( this.config.basePath, '');
   }
 
   return route;

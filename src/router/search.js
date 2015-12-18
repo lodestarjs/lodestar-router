@@ -13,6 +13,7 @@ import { clearCache, dynamicSplit } from '../utils/route';
  */
 function resolve ( path ) {
 
+  if ( path === '' ) path = '/';
   if ( !path ) return;
 
   let pointer = this.routes,

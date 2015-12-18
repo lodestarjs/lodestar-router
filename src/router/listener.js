@@ -51,7 +51,8 @@ function historyClick( e ) {
 
   let target = e.target,
     anchorLink = '',
-    formattedRoute;
+    formattedRoute = '',
+    unformattedRoute = '';
 
   if ( target.tagName !== 'A' ) target = checkParents( target );
 
@@ -63,13 +64,15 @@ function historyClick( e ) {
 
   if ( anchorLink.match(/(?:https?):/) && anchorLink.indexOf(window.location.hostname) === -1 ) return;
 
-  formattedRoute = formatRoute.call( this, removeOrigin( anchorLink ) );
+  // To push to the url in case there is a base path
+  unformattedRoute = removeOrigin( anchorLink );
+  formattedRoute = formatRoute.call( this,  unformattedRoute);
 
-  history.pushState(null, null, formattedRoute);
+  history.pushState(null, null, unformattedRoute);
 
   e.preventDefault();
 
-  return formattedRoute;
+  return formattedRoute === '' ? '/' : formattedRoute;
 
 }
 
@@ -101,7 +104,14 @@ function listener() {
 
     if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listening for clicks or popstate.');
 
-    docListener('click',(e) => { this.resolve( historyClick.call( this, e ) ); } );
+    docListener('click',(e) => {
+
+      let historyLink = historyClick.call(this, e);
+
+      if ( historyLink ) {
+        this.resolve(historyLink);
+      }
+    });
     windowListener('popstate',() => { this.resolve( formatRoute.call( this, window.location.pathname )); } );
 
   }
