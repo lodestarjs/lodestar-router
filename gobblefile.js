@@ -14,7 +14,7 @@ lib = gobble([
       entry: 'main.js',
       moduleName: 'Router',
       dest: 'router.js',
-      banner: `/* LodestarJS Router - ${info.version}. \nAuthor: Dan J Ford \nContributors: ${info.contributors} \nPublished: ${new Date()} */\n`
+      banner: `/* LodestarJS Router - ${info.version}. \nAuthor: Dan J Ford \nContributors: ${info.contributors} \nPublished: ${new Date()}  */\n`
     })
 ]);
 
