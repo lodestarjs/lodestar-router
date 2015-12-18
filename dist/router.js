@@ -1,7 +1,7 @@
 /* LodestarJS Router - 1.0.2. 
 Author: Dan J Ford 
 Contributors:  
-Published: Fri Dec 18 2015 18:37:05 GMT+0000 (GMT)  */
+Published: Fri Dec 18 2015 19:56:40 GMT+0000 (GMT)  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -377,7 +377,7 @@ Published: Fri Dec 18 2015 18:37:05 GMT+0000 (GMT)  */
     route = route.replace(/^(\/?[\#\!\?]+)/, '').replace(/$\//, '');
 
     if (this.config.basePath.length) {
-      route.replace(this.config.basePath, '');
+      route = route.replace(this.config.basePath, '');
     }
 
     return route;
@@ -439,7 +439,8 @@ Published: Fri Dec 18 2015 18:37:05 GMT+0000 (GMT)  */
 
     var target = e.target,
         anchorLink = '',
-        formattedRoute = undefined;
+        formattedRoute = '',
+        unformattedRoute = '';
 
     if (target.tagName !== 'A') target = checkParents(target);
 
@@ -451,9 +452,11 @@ Published: Fri Dec 18 2015 18:37:05 GMT+0000 (GMT)  */
 
     if (anchorLink.match(/(?:https?):/) && anchorLink.indexOf(window.location.hostname) === -1) return;
 
-    formattedRoute = formatRoute.call(this, removeOrigin(anchorLink));
+    // To push to the url in case there is a base path
+    unformattedRoute = removeOrigin(anchorLink);
+    formattedRoute = formatRoute.call(this, unformattedRoute);
 
-    history.pushState(null, null, formattedRoute);
+    history.pushState(null, null, unformattedRoute);
 
     e.preventDefault();
 

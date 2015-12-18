@@ -51,7 +51,8 @@ function historyClick( e ) {
 
   let target = e.target,
     anchorLink = '',
-    formattedRoute;
+    formattedRoute = '',
+    unformattedRoute = '';
 
   if ( target.tagName !== 'A' ) target = checkParents( target );
 
@@ -63,9 +64,11 @@ function historyClick( e ) {
 
   if ( anchorLink.match(/(?:https?):/) && anchorLink.indexOf(window.location.hostname) === -1 ) return;
 
-  formattedRoute = formatRoute.call( this, removeOrigin( anchorLink ) );
+  // To push to the url in case there is a base path
+  unformattedRoute = removeOrigin( anchorLink );
+  formattedRoute = formatRoute.call( this,  unformattedRoute);
 
-  history.pushState(null, null, formattedRoute);
+  history.pushState(null, null, unformattedRoute);
 
   e.preventDefault();
 
