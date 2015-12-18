@@ -105,7 +105,8 @@ function listener() {
     if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listening for clicks or popstate.');
 
     docListener('click',(e) => {
-      let historyLink = historyClick.call(_this, e);
+
+      let historyLink = historyClick.call(this, e);
 
       if ( historyLink ) {
         this.resolve(historyLink);
