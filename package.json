@@ -1,6 +1,6 @@
 {
   "name": "lodestar-router",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple but powerful router, it will be used in the LodestarJs framework.",
   "main": "dist/router.js",
   "jsnext:main": "src/main.js",

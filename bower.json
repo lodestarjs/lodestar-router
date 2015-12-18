@@ -1,6 +1,6 @@
 {
   "name": "lodestar-router",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/lodestarjs/lodestar-router",
   "authors": [
     "danjford <forddj93@gmail.com>"
@@ -11,8 +11,6 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "bower_components"
   ]
 }
