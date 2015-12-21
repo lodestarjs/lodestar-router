@@ -1,6 +1,6 @@
 import { logger } from '../utils/log';
 import { pageNotFound } from '../utils/route';
-import { clearCache, dynamicSplit, getParentController } from '../utils/route';
+import { clearCache, dynamicSplit, getParentPointer } from '../utils/route';
 
 /**
  * This goes through the entire routing tree, executing the matching paths.
@@ -77,7 +77,7 @@ function resolve ( path ) {
 
           pointer[ key ].routeData = routeData;
           pointer[ key ].active = true;
-          if ( parent ) pointer[ key ].getParent = function() { return getParentController( parent ); };
+          if ( parent ) pointer[ key ].getParent = function() { return getParentPointer( parent ); };
           pointer[ key ].controller();
 
         }
@@ -114,7 +114,7 @@ function resolve ( path ) {
 
       pointer[ keyCache ].routeData = routeData;
       pointer[ keyCache ].active = true;
-      if ( parent ) pointer[ keyCache ].getParent = function() { return getParentController( parent ); };
+      if ( parent ) pointer[ keyCache ].getParent = function() { return getParentPointer( parent ); };
       pointer[ keyCache ].controller();
 
     } else if ( !matchedParent ) {

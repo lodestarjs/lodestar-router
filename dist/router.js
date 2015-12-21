@@ -1,7 +1,7 @@
 /* LodestarJS Router - 1.0.4. 
 Author: Dan J Ford 
 Contributors:  
-Published: Mon Dec 21 2015 17:04:41 GMT+0000 (GMT)  */
+Published: Mon Dec 21 2015 17:17:18 GMT+0000 (GMT)  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -215,9 +215,9 @@ Published: Mon Dec 21 2015 17:04:41 GMT+0000 (GMT)  */
     notFoundLog(path, originalPath);
   }
 
-  function getParentController(pointer) {
+  function getParentPointer(pointer) {
 
-    return pointer.controller;
+    return pointer;
   }
 
   /**
@@ -289,7 +289,7 @@ Published: Mon Dec 21 2015 17:04:41 GMT+0000 (GMT)  */
             pointer[key].routeData = routeData;
             pointer[key].active = true;
             if (parent) pointer[key].getParent = function () {
-              return getParentController(parent);
+              return getParentPointer(parent);
             };
             pointer[key].controller();
           }
@@ -321,7 +321,7 @@ Published: Mon Dec 21 2015 17:04:41 GMT+0000 (GMT)  */
         pointer[keyCache].routeData = routeData;
         pointer[keyCache].active = true;
         if (parent) pointer[keyCache].getParent = function () {
-          return getParentController(parent);
+          return getParentPointer(parent);
         };
         pointer[keyCache].controller();
       } else if (!matchedParent) {
