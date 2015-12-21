@@ -1,7 +1,7 @@
 /* LodestarJS Router - 1.0.4. 
 Author: Dan J Ford 
 Contributors:  
-Published: Mon Dec 21 2015 17:23:19 GMT+0000 (GMT)  */
+Published: Mon Dec 21 2015 22:09:45 GMT+0000 (GMT)  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -160,24 +160,22 @@ Published: Mon Dec 21 2015 17:23:19 GMT+0000 (GMT)  */
 
   /**
    * Clears the routes cache of no longer needed active routes
-   * @param  {String} key, the original to not remove active from
-   * @param  {Object} pointer, the pointer to clear the cache from
+   * @param  {String} path, The current path
    * @return {Void}, nothing returned
    */
-  function clearCache(key, pointer) {
+  function clearCache(path) {
 
-    var props = Object.getOwnPropertyNames(pointer);
+    var cachedPath = this.cachedPath,
+        i = cachedPath.length;
 
-    for (var i = 0, ii = props.length; i < ii; i++) {
+    while (i--) {
 
-      if (props[i] !== key && pointer[props[i]] && pointer[props[i]].active === true) {
+      var key = Object.keys(cachedPath[i])[0];
 
-        pointer[props[i]].active = false;
+      if (path.indexOf(key) === -1) {
 
-        if (pointer[props[i]].childRoutes) {
-
-          clearCache(false, pointer[props[i]].childRoutes);
-        }
+        cachedPath[i][key].active = false;
+        cachedPath.splice(i, 1);
       }
     }
   }
@@ -239,7 +237,8 @@ Published: Mon Dec 21 2015 17:23:19 GMT+0000 (GMT)  */
         originalPath = path,
         isFinal = false,
         keyCache = '',
-        matchedParent = false;
+        matchedParent = false,
+        currentPath = [];
 
     while (path.length) {
 
@@ -283,6 +282,12 @@ Published: Mon Dec 21 2015 17:23:19 GMT+0000 (GMT)  */
 
         if (path.length && matchedParent) {
 
+          // This will be used to clear the cache
+          var obj = {};
+          obj[key] = pointer[key];
+          currentPath.push(key);
+          this.cachedPath.push(obj);
+
           // If it's not the final run and the current route is not active, execute it
           if (!pointer[key].active && !isFinal) {
 
@@ -296,9 +301,6 @@ Published: Mon Dec 21 2015 17:23:19 GMT+0000 (GMT)  */
 
           // Remove current part from the path
           path = path.replace(matchedParent[0], '').replace(/^\//, '').replace(/\/$/, '');
-
-          // Remove active from siblings and their children
-          if (pointer[key]) clearCache(key, pointer);
 
           // If it is not final then re-assign the pointer
           if (pointer[key].childRoutes && !isFinal) {
@@ -324,9 +326,11 @@ Published: Mon Dec 21 2015 17:23:19 GMT+0000 (GMT)  */
           return getParentPointer(parent);
         };
         pointer[keyCache].controller();
+        clearCache.call(this, currentPath);
       } else if (!matchedParent) {
 
         pageNotFound.call(this, path, originalPath);
+        clearCache.call(this, currentPath);
         path = '';
         break;
       }

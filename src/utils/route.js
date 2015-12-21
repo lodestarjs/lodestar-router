@@ -2,25 +2,22 @@ import { notFoundLog } from './log';
 
 /**
  * Clears the routes cache of no longer needed active routes
- * @param  {String} key, the original to not remove active from
- * @param  {Object} pointer, the pointer to clear the cache from
+ * @param  {String} path, The current path
  * @return {Void}, nothing returned
  */
-function clearCache ( key, pointer ) {
+function clearCache( path ) {
 
-  let props = Object.getOwnPropertyNames(pointer);
+  let cachedPath = this.cachedPath,
+    i = cachedPath.length;
 
-  for ( let i = 0, ii = props.length; i < ii; i++ ) {
+  while ( i-- ) {
 
-    if ( props[i] !== key && pointer[props[i]] && pointer[props[i]].active === true ) {
+    let key = Object.keys(cachedPath[i])[0];
 
-      pointer[props[i]].active = false;
+    if ( path.indexOf( key ) === -1 ) {
 
-      if ( pointer[props[i]].childRoutes ) {
-
-        clearCache(false, pointer[props[i]].childRoutes);
-
-      }
+      cachedPath[ i ][ key ].active = false;
+      cachedPath.splice( i, 1 );
 
     }
 

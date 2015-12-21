@@ -21,7 +21,8 @@ function resolve ( path ) {
     originalPath = path,
     isFinal = false,
     keyCache = '',
-    matchedParent = false;
+    matchedParent = false,
+    currentPath = [];
 
   while( path.length ) {
 
@@ -72,6 +73,12 @@ function resolve ( path ) {
 
       if( path.length && matchedParent ) {
 
+        // This will be used to clear the cache
+        let obj = {};
+        obj[ key ] = pointer[ key ];
+        currentPath.push( key );
+        this.cachedPath.push( obj );
+
         // If it's not the final run and the current route is not active, execute it
         if ( !pointer[ key ].active && !isFinal ) {
 
@@ -86,9 +93,6 @@ function resolve ( path ) {
         path = path.replace( matchedParent[0], '' )
                   .replace(/^\//, '')
                   .replace(/\/$/, '');
-
-        // Remove active from siblings and their children
-        if ( pointer[key] ) clearCache( key, pointer );
 
         // If it is not final then re-assign the pointer
         if ( pointer[key].childRoutes && !isFinal ) {
@@ -116,10 +120,12 @@ function resolve ( path ) {
       pointer[ keyCache ].active = true;
       if ( parent ) pointer[ keyCache ].getParent = function() { return getParentPointer( parent ); };
       pointer[ keyCache ].controller();
+      clearCache.call(this, currentPath);
 
     } else if ( !matchedParent ) {
 
       pageNotFound.call( this, path, originalPath );
+      clearCache.call(this, currentPath);
       path = '';
       break;
 
