@@ -1,7 +1,7 @@
-/* LodestarJS Router - 1.0.3. 
+/* LodestarJS Router - 1.0.4. 
 Author: Dan J Ford 
 Contributors:  
-Published: Mon Dec 21 2015 16:46:47 GMT+0000 (GMT)  */
+Published: Mon Dec 21 2015 17:04:41 GMT+0000 (GMT)  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -126,8 +126,8 @@ Published: Mon Dec 21 2015 16:46:47 GMT+0000 (GMT)  */
     if (hasConsole && globals.DEBUG) console.warn.apply(console, arguments);
   };
 
-  var routerIntro = ['LodestarJs-Router 1.0.3 in debug mode.'];
-  var routerMessage = '\n\nHello, you are running the LodestarJs Router 1.0.3 in debug mode.\nThis will help you to identify any problems in your application.\n\nDEBUG mode is a global option, to disable debug mode will disable it for each\ninstance. You can disable it when declaring a new instance. For example,\nnew Router({DEBUG: false});\n\nFor documentation head to the wiki:\n  https://github.com/lodestarjs/lodestar-router/wiki\n\nIf you have found any bugs, create an issue for us:\n  https://github.com/lodestarjs/lodestar-router/issues\n\n';
+  var routerIntro = ['LodestarJs-Router 1.0.4 in debug mode.'];
+  var routerMessage = '\n\nHello, you are running the LodestarJs Router 1.0.4 in debug mode.\nThis will help you to identify any problems in your application.\n\nDEBUG mode is a global option, to disable debug mode will disable it for each\ninstance. You can disable it when declaring a new instance. For example,\nnew Router({DEBUG: false});\n\nFor documentation head to the wiki:\n  https://github.com/lodestarjs/lodestar-router/wiki\n\nIf you have found any bugs, create an issue for us:\n  https://github.com/lodestarjs/lodestar-router/issues\n\n';
 
   /**
    * The welcome function gives a message to the user letting the know
@@ -230,7 +230,6 @@ Published: Mon Dec 21 2015 16:46:47 GMT+0000 (GMT)  */
    * @return {Void}, nothing returned
    */
   function resolve(path) {
-    var _this = this;
 
     if (path === '') path = '/';
     if (!path) return;
@@ -247,38 +246,37 @@ Published: Mon Dec 21 2015 16:46:47 GMT+0000 (GMT)  */
       var routeData = {};
 
       // For each child of the current pointer which is some child of routes
-
-      var _loop = function (_key) {
+      for (var key in pointer) {
 
         var dynamicKey = false;
 
-        keyCache = _key;
+        keyCache = key;
 
         // If contains : then it has dynamic segments
-        if (_key.indexOf(':') > -1) {
+        if (key.indexOf(':') > -1) {
 
-          var splitKey = _key.split(':');
+          var splitKey = key.split(':');
 
           // If there are more : than expected then there are multiple dynamic segments
           if (splitKey.length > 2) {
 
             routeData = dynamicSplit(path, splitKey);
-            dynamicKey = _key.replace(/\:[^\/]*/g, '[^\\/]*');
+            dynamicKey = key.replace(/\:[^\/]*/g, '[^\\/]*');
           } else {
 
-            routeData[_key.replace(':', '')] = path.match(/[^\/]*/)[0];
+            routeData[key.replace(':', '')] = path.match(/[^\/]*/)[0];
             dynamicKey = /[^\/]*/;
           }
         }
 
         // If contains * then there is a wildcard segment
-        if (_key.match(/\*[a-z]+/i)) {
+        if (key.match(/\*[a-z]+/i)) {
 
-          routeData[_key.replace(/\*[a-z]+/i, '')] = path.match(/.*/)[0].split('/');
+          routeData[key.replace(/\*[a-z]+/i, '')] = path.match(/.*/)[0].split('/');
           dynamicKey = /.*/;
         }
 
-        matchedParent = path.match('^' + (dynamicKey || _key));
+        matchedParent = path.match('^' + (dynamicKey || key));
 
         // Find out if we're on the final run
         isFinal = matchedParent && path.replace(matchedParent[0], '').replace(/^\//, '').replace(/\/$/, '').length === 0 ? true : false;
@@ -286,41 +284,35 @@ Published: Mon Dec 21 2015 16:46:47 GMT+0000 (GMT)  */
         if (path.length && matchedParent) {
 
           // If it's not the final run and the current route is not active, execute it
-          if (!pointer[_key].active && !isFinal) {
+          if (!pointer[key].active && !isFinal) {
 
-            pointer[_key].routeData = routeData;
-            pointer[_key].active = true;
-            pointer[_key].getParent = parent ? getParentController(parent) : function () {
-              throw new Error('No parent found for ' + _key);
+            pointer[key].routeData = routeData;
+            pointer[key].active = true;
+            if (parent) pointer[key].getParent = function () {
+              return getParentController(parent);
             };
-            pointer[_key].controller();
+            pointer[key].controller();
           }
 
           // Remove current part from the path
           path = path.replace(matchedParent[0], '').replace(/^\//, '').replace(/\/$/, '');
 
           // Remove active from siblings and their children
-          if (pointer[_key]) clearCache(_key, pointer);
+          if (pointer[key]) clearCache(key, pointer);
 
           // If it is not final then re-assign the pointer
-          if (pointer[_key].childRoutes && !isFinal) {
+          if (pointer[key].childRoutes && !isFinal) {
 
-            parent = pointer[_key];
-            pointer = pointer[_key].childRoutes;
+            parent = pointer[key];
+            pointer = pointer[key].childRoutes;
           } else if (!isFinal) {
 
-            pageNotFound.call(_this, path, originalPath);
+            pageNotFound.call(this, path, originalPath);
             path = '';
           }
 
-          return 'break';
+          break;
         }
-      };
-
-      for (var _key in pointer) {
-        var _ret = _loop(_key);
-
-        if (_ret === 'break') break;
       }
 
       // If it's the final page, re-execute it and set to active
@@ -328,7 +320,9 @@ Published: Mon Dec 21 2015 16:46:47 GMT+0000 (GMT)  */
 
         pointer[keyCache].routeData = routeData;
         pointer[keyCache].active = true;
-        if (parent) pointer[key].getParent = getParentController(parent);
+        if (parent) pointer[keyCache].getParent = function () {
+          return getParentController(parent);
+        };
         pointer[keyCache].controller();
       } else if (!matchedParent) {
 
@@ -353,16 +347,16 @@ Published: Mon Dec 21 2015 16:46:47 GMT+0000 (GMT)  */
 
     while (parents.length) {
 
-      for (var _key2 in pointer) {
+      for (var key in pointer) {
 
-        var matchedParent = parents.match('^' + _key2);
+        var matchedParent = parents.match('^' + key);
 
         if (parents.length && matchedParent) {
 
           parents = parents.replace(matchedParent[0], '').replace(/^\//, '').replace(/\/$/, '');
 
-          createPointer = pointer[_key2];
-          pointer = pointer[_key2].childRoutes || pointer[_key2];
+          createPointer = pointer[key];
+          pointer = pointer[key].childRoutes || pointer[key];
 
           break;
         }
