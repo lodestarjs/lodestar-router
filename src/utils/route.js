@@ -10,9 +10,9 @@ function clearCache ( key, pointer ) {
 
   let props = Object.getOwnPropertyNames(pointer);
 
-  for (let i = 0, ii = props.length; i < ii; i++) {
+  for ( let i = 0, ii = props.length; i < ii; i++ ) {
 
-    if (props[i] !== key) {
+    if ( props[i] !== key && pointer[props[i]] && pointer[props[i]].active === true ) {
 
       pointer[props[i]].active = false;
 

@@ -1,7 +1,7 @@
 /* LodestarJS Router - 1.0.4. 
 Author: Dan J Ford 
 Contributors:  
-Published: Mon Dec 21 2015 17:17:18 GMT+0000 (GMT)  */
+Published: Mon Dec 21 2015 17:23:19 GMT+0000 (GMT)  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -170,7 +170,7 @@ Published: Mon Dec 21 2015 17:17:18 GMT+0000 (GMT)  */
 
     for (var i = 0, ii = props.length; i < ii; i++) {
 
-      if (props[i] !== key) {
+      if (props[i] !== key && pointer[props[i]] && pointer[props[i]].active === true) {
 
         pointer[props[i]].active = false;
 
