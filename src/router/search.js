@@ -114,7 +114,7 @@ function resolve ( path ) {
 
       pointer[ keyCache ].routeData = routeData;
       pointer[ keyCache ].active = true;
-      if ( parent ) pointer[ key ].getParent = getParentController( parent );
+      pointer[ keyCache ].getParent = parent ? getParentController( parent ) : function() { throw new Error(`No parent found for ${keyCache}`); };
       pointer[ keyCache ].controller();
 
     } else if ( !matchedParent ) {
