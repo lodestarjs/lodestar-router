@@ -1,6 +1,6 @@
 import { logger } from '../utils/log';
 import { pageNotFound } from '../utils/route';
-import { clearCache, dynamicSplit } from '../utils/route';
+import { clearCache, dynamicSplit, getParentController } from '../utils/route';
 
 /**
  * This goes through the entire routing tree, executing the matching paths.
@@ -17,6 +17,7 @@ function resolve ( path ) {
   if ( !path ) return;
 
   let pointer = this.routes,
+    parent = false,
     originalPath = path,
     isFinal = false,
     keyCache = '',
@@ -76,6 +77,7 @@ function resolve ( path ) {
 
           pointer[ key ].routeData = routeData;
           pointer[ key ].active = true;
+          pointer[ key ].getParent = parent ? getParentController( parent ) : function() { throw new Error(`No parent found for ${key}`); };
           pointer[ key ].controller();
 
         }
@@ -91,6 +93,7 @@ function resolve ( path ) {
         // If it is not final then re-assign the pointer
         if ( pointer[key].childRoutes && !isFinal ) {
 
+          parent  = pointer[ key ];
           pointer = pointer[ key ].childRoutes;
 
         } else if ( !isFinal ) {
@@ -111,6 +114,7 @@ function resolve ( path ) {
 
       pointer[ keyCache ].routeData = routeData;
       pointer[ keyCache ].active = true;
+      if ( parent ) pointer[ key ].getParent = getParentController( parent );
       pointer[ keyCache ].controller();
 
     } else if ( !matchedParent ) {

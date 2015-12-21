@@ -64,4 +64,10 @@ function pageNotFound ( path, originalPath ) {
 
 }
 
-export { dynamicSplit, clearCache, pageNotFound, notFound };
+function getParentController ( pointer ) {
+
+  return pointer.controller;
+
+}
+
+export { dynamicSplit, clearCache, pageNotFound, notFound, getParentController };

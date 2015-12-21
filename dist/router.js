@@ -1,7 +1,7 @@
 /* LodestarJS Router - 1.0.3. 
 Author: Dan J Ford 
 Contributors:  
-Published: Fri Dec 18 2015 21:27:21 GMT+0000 (GMT)  */
+Published: Mon Dec 21 2015 16:46:47 GMT+0000 (GMT)  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -215,6 +215,11 @@ Published: Fri Dec 18 2015 21:27:21 GMT+0000 (GMT)  */
     notFoundLog(path, originalPath);
   }
 
+  function getParentController(pointer) {
+
+    return pointer.controller;
+  }
+
   /**
    * This goes through the entire routing tree, executing the matching paths.
    *
@@ -225,11 +230,13 @@ Published: Fri Dec 18 2015 21:27:21 GMT+0000 (GMT)  */
    * @return {Void}, nothing returned
    */
   function resolve(path) {
+    var _this = this;
 
     if (path === '') path = '/';
     if (!path) return;
 
     var pointer = this.routes,
+        parent = false,
         originalPath = path,
         isFinal = false,
         keyCache = '',
@@ -240,37 +247,38 @@ Published: Fri Dec 18 2015 21:27:21 GMT+0000 (GMT)  */
       var routeData = {};
 
       // For each child of the current pointer which is some child of routes
-      for (var key in pointer) {
+
+      var _loop = function (_key) {
 
         var dynamicKey = false;
 
-        keyCache = key;
+        keyCache = _key;
 
         // If contains : then it has dynamic segments
-        if (key.indexOf(':') > -1) {
+        if (_key.indexOf(':') > -1) {
 
-          var splitKey = key.split(':');
+          var splitKey = _key.split(':');
 
           // If there are more : than expected then there are multiple dynamic segments
           if (splitKey.length > 2) {
 
             routeData = dynamicSplit(path, splitKey);
-            dynamicKey = key.replace(/\:[^\/]*/g, '[^\\/]*');
+            dynamicKey = _key.replace(/\:[^\/]*/g, '[^\\/]*');
           } else {
 
-            routeData[key.replace(':', '')] = path.match(/[^\/]*/)[0];
+            routeData[_key.replace(':', '')] = path.match(/[^\/]*/)[0];
             dynamicKey = /[^\/]*/;
           }
         }
 
         // If contains * then there is a wildcard segment
-        if (key.match(/\*[a-z]+/i)) {
+        if (_key.match(/\*[a-z]+/i)) {
 
-          routeData[key.replace(/\*[a-z]+/i, '')] = path.match(/.*/)[0].split('/');
+          routeData[_key.replace(/\*[a-z]+/i, '')] = path.match(/.*/)[0].split('/');
           dynamicKey = /.*/;
         }
 
-        matchedParent = path.match('^' + (dynamicKey || key));
+        matchedParent = path.match('^' + (dynamicKey || _key));
 
         // Find out if we're on the final run
         isFinal = matchedParent && path.replace(matchedParent[0], '').replace(/^\//, '').replace(/\/$/, '').length === 0 ? true : false;
@@ -278,31 +286,41 @@ Published: Fri Dec 18 2015 21:27:21 GMT+0000 (GMT)  */
         if (path.length && matchedParent) {
 
           // If it's not the final run and the current route is not active, execute it
-          if (!pointer[key].active && !isFinal) {
+          if (!pointer[_key].active && !isFinal) {
 
-            pointer[key].routeData = routeData;
-            pointer[key].active = true;
-            pointer[key].controller();
+            pointer[_key].routeData = routeData;
+            pointer[_key].active = true;
+            pointer[_key].getParent = parent ? getParentController(parent) : function () {
+              throw new Error('No parent found for ' + _key);
+            };
+            pointer[_key].controller();
           }
 
           // Remove current part from the path
           path = path.replace(matchedParent[0], '').replace(/^\//, '').replace(/\/$/, '');
 
           // Remove active from siblings and their children
-          if (pointer[key]) clearCache(key, pointer);
+          if (pointer[_key]) clearCache(_key, pointer);
 
           // If it is not final then re-assign the pointer
-          if (pointer[key].childRoutes && !isFinal) {
+          if (pointer[_key].childRoutes && !isFinal) {
 
-            pointer = pointer[key].childRoutes;
+            parent = pointer[_key];
+            pointer = pointer[_key].childRoutes;
           } else if (!isFinal) {
 
-            pageNotFound.call(this, path, originalPath);
+            pageNotFound.call(_this, path, originalPath);
             path = '';
           }
 
-          break;
+          return 'break';
         }
+      };
+
+      for (var _key in pointer) {
+        var _ret = _loop(_key);
+
+        if (_ret === 'break') break;
       }
 
       // If it's the final page, re-execute it and set to active
@@ -310,6 +328,7 @@ Published: Fri Dec 18 2015 21:27:21 GMT+0000 (GMT)  */
 
         pointer[keyCache].routeData = routeData;
         pointer[keyCache].active = true;
+        if (parent) pointer[key].getParent = getParentController(parent);
         pointer[keyCache].controller();
       } else if (!matchedParent) {
 
@@ -334,16 +353,16 @@ Published: Fri Dec 18 2015 21:27:21 GMT+0000 (GMT)  */
 
     while (parents.length) {
 
-      for (var key in pointer) {
+      for (var _key2 in pointer) {
 
-        var matchedParent = parents.match('^' + key);
+        var matchedParent = parents.match('^' + _key2);
 
         if (parents.length && matchedParent) {
 
           parents = parents.replace(matchedParent[0], '').replace(/^\//, '').replace(/\/$/, '');
 
-          createPointer = pointer[key];
-          pointer = pointer[key].childRoutes || pointer[key];
+          createPointer = pointer[_key2];
+          pointer = pointer[_key2].childRoutes || pointer[_key2];
 
           break;
         }
@@ -440,6 +459,7 @@ Published: Fri Dec 18 2015 21:27:21 GMT+0000 (GMT)  */
 
     var target = e.target,
         anchorLink = '',
+        targetAttr = '',
         formattedRoute = '',
         unformattedRoute = '';
 
@@ -448,10 +468,11 @@ Published: Fri Dec 18 2015 21:27:21 GMT+0000 (GMT)  */
     if (!target) return;
 
     anchorLink = target.getAttribute('href');
+    targetAttr = target.getAttribute('target');
 
-    if (anchorLink === '_blank' || anchorLink.indexOf(':') > -1 && !anchorLink.match(/(?:https?):/)) return;
+    if (anchorLink.indexOf(':') > -1 && !anchorLink.match(/(?:https?):/)) return;
 
-    if (anchorLink.match(/(?:https?):/) && anchorLink.indexOf(window.location.hostname) === -1) return;
+    if (targetAttr === '_blank' || anchorLink.match(/(?:https?):/) && anchorLink.indexOf(window.location.hostname) === -1) return;
 
     // To push to the url in case there is a base path
     unformattedRoute = removeOrigin(anchorLink);

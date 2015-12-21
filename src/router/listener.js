@@ -51,6 +51,7 @@ function historyClick( e ) {
 
   let target = e.target,
     anchorLink = '',
+    targetAttr = '',
     formattedRoute = '',
     unformattedRoute = '';
 
@@ -59,10 +60,11 @@ function historyClick( e ) {
   if ( !target ) return;
 
   anchorLink = target.getAttribute('href');
+  targetAttr = target.getAttribute('target');
 
-  if ( anchorLink === '_blank' || (anchorLink.indexOf(':') > -1 && !anchorLink.match(/(?:https?):/)) ) return;
+  if ( anchorLink.indexOf(':') > -1 && !anchorLink.match(/(?:https?):/) ) return;
 
-  if ( anchorLink.match(/(?:https?):/) && anchorLink.indexOf(window.location.hostname) === -1 ) return;
+  if ( targetAttr === '_blank' || (anchorLink.match(/(?:https?):/) && anchorLink.indexOf(window.location.hostname) === -1) ) return;
 
   // To push to the url in case there is a base path
   unformattedRoute = removeOrigin( anchorLink );
