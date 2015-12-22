@@ -23,6 +23,7 @@ function initConfig( _this ) {
 
   _this.routes = {};
   _this.config = merge( {}, defaultConfig );
+  _this.cachedPath = [];
   window.LodeVar = window.LodeVar || {};
 
 }

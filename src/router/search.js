@@ -1,6 +1,6 @@
 import { logger } from '../utils/log';
 import { pageNotFound } from '../utils/route';
-import { clearCache, dynamicSplit } from '../utils/route';
+import { clearCache, dynamicSplit, getParentPointer } from '../utils/route';
 
 /**
  * This goes through the entire routing tree, executing the matching paths.
@@ -17,10 +17,12 @@ function resolve ( path ) {
   if ( !path ) return;
 
   let pointer = this.routes,
+    parent = false,
     originalPath = path,
     isFinal = false,
     keyCache = '',
-    matchedParent = false;
+    matchedParent = false,
+    currentPath = [];
 
   while( path.length ) {
 
@@ -34,7 +36,7 @@ function resolve ( path ) {
       keyCache = key;
 
       // If contains : then it has dynamic segments
-      if ( key.indexOf(':') > - 1) {
+      if ( key.indexOf(':') > -1 ) {
 
         let splitKey = key.split(':');
 
@@ -46,18 +48,18 @@ function resolve ( path ) {
 
         } else {
 
-          routeData[key.replace(':', '')] = path.match(/[^\/]*/)[0];
-          dynamicKey = /[^\/]*/;
+          routeData[key.match(/\:[^\/]*/g)[0].replace(/(\:|\/)/g, '')] = path.match(/[^\/]*/)[0];
+          dynamicKey = key.replace(/\*[^\/]*/g, '').replace(/\:[^\/]*/g, '[^\\/]*');
 
         }
 
       }
 
       // If contains * then there is a wildcard segment
-      if ( key.match(/\*[a-z]+/i) ) {
+      if (key.match(/\*[a-z]+/i)) {
 
-        routeData[key.replace(/\*[a-z]+/i, '')] = path.match(/.*/)[0].split('/');
-        dynamicKey = /.*/;
+        routeData[key.match(/\*[a-z]+/i)[0].replace(/\*/gi, '')] = path.replace(new RegExp(dynamicKey), '').match(/.*/)[0].split('/');
+        dynamicKey = '.*';
 
       }
 
@@ -71,11 +73,18 @@ function resolve ( path ) {
 
       if( path.length && matchedParent ) {
 
+        // This will be used to clear the cache
+        let obj = {};
+        obj[ key ] = pointer[ key ];
+        currentPath.push( key );
+        this.cachedPath.push( obj );
+
         // If it's not the final run and the current route is not active, execute it
         if ( !pointer[ key ].active && !isFinal ) {
 
           pointer[ key ].routeData = routeData;
           pointer[ key ].active = true;
+          if ( parent ) pointer[ key ].getParent = function() { return getParentPointer( parent ); };
           pointer[ key ].controller();
 
         }
@@ -85,12 +94,10 @@ function resolve ( path ) {
                   .replace(/^\//, '')
                   .replace(/\/$/, '');
 
-        // Remove active from siblings and their children
-        if ( pointer[key] ) clearCache( key, pointer );
-
         // If it is not final then re-assign the pointer
         if ( pointer[key].childRoutes && !isFinal ) {
 
+          parent  = pointer[ key ];
           pointer = pointer[ key ].childRoutes;
 
         } else if ( !isFinal ) {
@@ -111,11 +118,14 @@ function resolve ( path ) {
 
       pointer[ keyCache ].routeData = routeData;
       pointer[ keyCache ].active = true;
+      if ( parent ) pointer[ keyCache ].getParent = function() { return getParentPointer( parent ); };
       pointer[ keyCache ].controller();
+      clearCache.call(this, currentPath);
 
     } else if ( !matchedParent ) {
 
       pageNotFound.call( this, path, originalPath );
+      clearCache.call(this, currentPath);
       path = '';
       break;
 
