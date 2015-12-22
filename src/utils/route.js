@@ -39,7 +39,7 @@ function dynamicSplit ( path, splitKey ) {
 
   for( let i = 0, ii = splitKey.length; i < ii; i++){
 
-    output[splitKey[i].replace(/\//g, '')] = path.match(/[^\/]*/g)[i !== 0 ? i + i: i];
+    output[splitKey[i].split('/')[0].replace(/\//g, '')] = path.match(/[^\/]*/g)[i !== 0 ? i + i : i];
 
   }
 

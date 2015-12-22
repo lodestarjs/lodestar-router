@@ -1,7 +1,7 @@
 /* LodestarJS Router - 1.0.4. 
 Author: Dan J Ford 
 Contributors:  
-Published: Mon Dec 21 2015 22:12:22 GMT+0000 (GMT)  */
+Published: Tue Dec 22 2015 01:16:02 GMT+0000 (GMT)  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -195,7 +195,7 @@ Published: Mon Dec 21 2015 22:12:22 GMT+0000 (GMT)  */
 
     for (var i = 0, ii = splitKey.length; i < ii; i++) {
 
-      output[splitKey[i].replace(/\//g, '')] = path.match(/[^\/]*/g)[i !== 0 ? i + i : i];
+      output[splitKey[i].split('/')[0].replace(/\//g, '')] = path.match(/[^\/]*/g)[i !== 0 ? i + i : i];
     }
 
     return output;
@@ -265,15 +265,15 @@ Published: Mon Dec 21 2015 22:12:22 GMT+0000 (GMT)  */
           } else {
 
             routeData[key.replace(':', '')] = path.match(/[^\/]*/)[0];
-            dynamicKey = /[^\/]*/;
+            dynamicKey = '[^\/]*';
           }
         }
 
         // If contains * then there is a wildcard segment
         if (key.match(/\*[a-z]+/i)) {
 
-          routeData[key.replace(/\*[a-z]+/i, '')] = path.match(/.*/)[0].split('/');
-          dynamicKey = /.*/;
+          routeData[key.match(/\*[a-z]+/i)[0].replace(/\*/gi, '')] = path.match(/.*/)[0].split('/');
+          dynamicKey = '.*';
         }
 
         matchedParent = path.match('^' + (dynamicKey || key));

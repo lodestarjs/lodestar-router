@@ -49,17 +49,17 @@ function resolve ( path ) {
         } else {
 
           routeData[key.replace(':', '')] = path.match(/[^\/]*/)[0];
-          dynamicKey = /[^\/]*/;
+          dynamicKey = '[^\/]*';
 
         }
 
       }
 
       // If contains * then there is a wildcard segment
-      if ( key.match(/\*[a-z]+/i) ) {
+      if (key.match(/\*[a-z]+/i)) {
 
-        routeData[key.replace(/\*[a-z]+/i, '')] = path.match(/.*/)[0].split('/');
-        dynamicKey = /.*/;
+        routeData[key.match(/\*[a-z]+/i)[0].replace(/\*/gi, '')] = path.match(/.*/)[0].split('/');
+        dynamicKey = '.*';
 
       }
 
