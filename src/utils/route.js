@@ -2,25 +2,22 @@ import { notFoundLog } from './log';
 
 /**
  * Clears the routes cache of no longer needed active routes
- * @param  {String} key, the original to not remove active from
- * @param  {Object} pointer, the pointer to clear the cache from
+ * @param  {String} path, The current path
  * @return {Void}, nothing returned
  */
-function clearCache ( key, pointer ) {
+function clearCache( path ) {
 
-  let props = Object.getOwnPropertyNames(pointer);
+  let cachedPath = this.cachedPath,
+    i = cachedPath.length;
 
-  for (let i = 0, ii = props.length; i < ii; i++) {
+  while ( i-- ) {
 
-    if (props[i] !== key) {
+    let key = Object.keys(cachedPath[i])[0];
 
-      pointer[props[i]].active = false;
+    if ( path.indexOf( key ) === -1 ) {
 
-      if ( pointer[props[i]].childRoutes ) {
-
-        clearCache(false, pointer[props[i]].childRoutes);
-
-      }
+      cachedPath[ i ][ key ].active = false;
+      cachedPath.splice( i, 1 );
 
     }
 
@@ -42,7 +39,7 @@ function dynamicSplit ( path, splitKey ) {
 
   for( let i = 0, ii = splitKey.length; i < ii; i++){
 
-    output[splitKey[i].replace(/\//g, '')] = path.match(/[^\/]*/g)[i !== 0 ? i + i: i];
+    output[splitKey[i].split('/')[0].replace(/\//g, '')] = path.match(/[^\/]*/g)[i !== 0 ? i + i : i];
 
   }
 
@@ -64,4 +61,10 @@ function pageNotFound ( path, originalPath ) {
 
 }
 
-export { dynamicSplit, clearCache, pageNotFound, notFound };
+function getParentPointer ( pointer ) {
+
+  return pointer;
+
+}
+
+export { dynamicSplit, clearCache, pageNotFound, notFound, getParentPointer };
