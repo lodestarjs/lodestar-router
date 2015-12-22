@@ -1,7 +1,7 @@
 /* LodestarJS Router - 1.0.4. 
 Author: Dan J Ford 
 Contributors:  
-Published: Tue Dec 22 2015 01:16:02 GMT+0000 (GMT)  */
+Published: Tue Dec 22 2015 02:15:30 GMT+0000 (GMT)  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -264,15 +264,15 @@ Published: Tue Dec 22 2015 01:16:02 GMT+0000 (GMT)  */
             dynamicKey = key.replace(/\:[^\/]*/g, '[^\\/]*');
           } else {
 
-            routeData[key.replace(':', '')] = path.match(/[^\/]*/)[0];
-            dynamicKey = '[^\/]*';
+            routeData[key.match(/\:[^\/]*/g)[0].replace(/(\:|\/)/g, '')] = path.match(/[^\/]*/)[0];
+            dynamicKey = key.replace(/\*[^\/]*/g, '').replace(/\:[^\/]*/g, '[^\\/]*');
           }
         }
 
         // If contains * then there is a wildcard segment
         if (key.match(/\*[a-z]+/i)) {
 
-          routeData[key.match(/\*[a-z]+/i)[0].replace(/\*/gi, '')] = path.match(/.*/)[0].split('/');
+          routeData[key.match(/\*[a-z]+/i)[0].replace(/\*/gi, '')] = path.replace(new RegExp(dynamicKey), '').match(/.*/)[0].split('/');
           dynamicKey = '.*';
         }
 

@@ -36,7 +36,7 @@ function resolve ( path ) {
       keyCache = key;
 
       // If contains : then it has dynamic segments
-      if ( key.indexOf(':') > - 1) {
+      if ( key.indexOf(':') > -1 ) {
 
         let splitKey = key.split(':');
 
@@ -48,8 +48,8 @@ function resolve ( path ) {
 
         } else {
 
-          routeData[key.replace(':', '')] = path.match(/[^\/]*/)[0];
-          dynamicKey = '[^\/]*';
+          routeData[key.match(/\:[^\/]*/g)[0].replace(/(\:|\/)/g, '')] = path.match(/[^\/]*/)[0];
+          dynamicKey = key.replace(/\*[^\/]*/g, '').replace(/\:[^\/]*/g, '[^\\/]*');
 
         }
 
@@ -58,7 +58,7 @@ function resolve ( path ) {
       // If contains * then there is a wildcard segment
       if (key.match(/\*[a-z]+/i)) {
 
-        routeData[key.match(/\*[a-z]+/i)[0].replace(/\*/gi, '')] = path.match(/.*/)[0].split('/');
+        routeData[key.match(/\*[a-z]+/i)[0].replace(/\*/gi, '')] = path.replace(new RegExp(dynamicKey), '').match(/.*/)[0].split('/');
         dynamicKey = '.*';
 
       }
