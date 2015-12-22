@@ -65,7 +65,7 @@ describe('Create Success', () => {
       controller: () =>  { }
     });
 
-    assert(!!router.getRoutes()['/'], 'Index route not inserted.');
+    assert(!!router.routes['/'], 'Index route not inserted.');
 
   });
 
@@ -81,28 +81,7 @@ describe('Create Success', () => {
       controller: () =>  { }
     });
 
-
-    assert(!!router.getRoutes()['/'].childRoutes['home'], 'Home route is not present.');
-
-  });
-
-});
-
-describe('map()', () =>  {
-
-  let router = new Router({ DEBUG: false });
-
-  it('should successfully insert the mapData', () =>  {
-
-    router.map(mapData);
-
-    let routes = router.getRoutes(),
-      indexRoute = routes['/'],
-      homeRoute = indexRoute.childRoutes['home'],
-      idRoute = homeRoute.childRoutes[':id'],
-      anyRoute = idRoute.childRoutes['*any'];
-
-    assert((indexRoute && homeRoute && idRoute && anyRoute), 'These routes have not been inserted.');
+    assert(!!router.routes['/'].childRoutes['home'], 'Home route is not present.');
 
   });
 

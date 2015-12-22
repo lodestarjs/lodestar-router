@@ -1,7 +1,7 @@
 /* LodestarJS Router - 1.0.4. 
 Author: Dan J Ford 
 Contributors:  
-Published: Tue Dec 22 2015 02:15:30 GMT+0000 (GMT)  */
+Published: Tue Dec 22 2015 04:25:11 GMT+0000 (GMT)  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -378,15 +378,6 @@ Published: Tue Dec 22 2015 02:15:30 GMT+0000 (GMT)  */
     createPointer.childRoutes[routeObject.path].controller = routeObject.controller;
   }
 
-  /**
-   * Returns all of the current routes in this instance of the Router.
-   * @return {Object} returns the routes.
-   */
-  function getRoutes() {
-
-    return copy({}, this.routes);
-  }
-
   function formatRoute(route) {
 
     if (route === '') {
@@ -605,7 +596,6 @@ Published: Tue Dec 22 2015 02:15:30 GMT+0000 (GMT)  */
 
     createRoute: createRoute,
     map: map,
-    getRoutes: getRoutes,
     resolve: resolve,
     notFound: function notFound(callback) {
       this.userNotFound = callback;
