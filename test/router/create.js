@@ -86,3 +86,23 @@ describe('Create Success', () => {
   });
 
 });
+
+describe('map()', () =>  {
+
+  let router = new Router({ DEBUG: false });
+
+  it('should successfully insert the mapData', () =>  {
+
+    router.map(mapData);
+
+    let routes = router.routes,
+      indexRoute = routes['/'],
+      homeRoute = indexRoute.childRoutes['home'],
+      idRoute = homeRoute.childRoutes[':id'],
+      anyRoute = idRoute.childRoutes['*any'];
+
+    assert((indexRoute && homeRoute && idRoute && anyRoute), 'These routes have not been inserted.');
+
+  });
+
+});
