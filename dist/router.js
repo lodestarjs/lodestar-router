@@ -1,7 +1,7 @@
-/* LodestarJS Router - 1.0.4. 
+/* LodestarJS Router - 1.0.5. 
 Author: Dan J Ford 
 Contributors:  
-Published: Tue Dec 22 2015 04:33:54 GMT+0000 (GMT)  */
+Published: Wed Dec 23 2015 00:01:37 GMT+0000 (GMT)  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -127,8 +127,8 @@ Published: Tue Dec 22 2015 04:33:54 GMT+0000 (GMT)  */
     if (hasConsole && globals.DEBUG) console.warn.apply(console, arguments);
   };
 
-  var routerIntro = ['LodestarJs-Router 1.0.4 in debug mode.'];
-  var routerMessage = '\n\nHello, you are running the LodestarJs Router 1.0.4 in debug mode.\nThis will help you to identify any problems in your application.\n\nDEBUG mode is a global option, to disable debug mode will disable it for each\ninstance. You can disable it when declaring a new instance. For example,\nnew Router({DEBUG: false});\n\nFor documentation head to the wiki:\n  https://github.com/lodestarjs/lodestar-router/wiki\n\nIf you have found any bugs, create an issue for us:\n  https://github.com/lodestarjs/lodestar-router/issues\n\n';
+  var routerIntro = ['LodestarJs-Router 1.0.5 in debug mode.'];
+  var routerMessage = '\n\nHello, you are running the LodestarJs Router 1.0.5 in debug mode.\nThis will help you to identify any problems in your application.\n\nDEBUG mode is a global option, to disable debug mode will disable it for each\ninstance. You can disable it when declaring a new instance. For example,\nnew Router({DEBUG: false});\n\nFor documentation head to the wiki:\n  https://github.com/lodestarjs/lodestar-router/wiki\n\nIf you have found any bugs, create an issue for us:\n  https://github.com/lodestarjs/lodestar-router/issues\n\n';
 
   /**
    * The welcome function gives a message to the user letting the know
@@ -475,6 +475,17 @@ Published: Tue Dec 22 2015 04:33:54 GMT+0000 (GMT)  */
     return formattedRoute === '' ? '/' : formattedRoute;
   }
 
+  function listenEvent(target, e, f) {
+
+    if (hasEventListener) {
+
+      target.addEventListener(e, f, false);
+    } else {
+
+      target.attachEvent(e, f);
+    }
+  }
+
   /**
    * This sets up the events for 'Hashchange' and 'History' mode depending on what has been selected and what is available.
    * @return {Void}, nothing returned
@@ -486,13 +497,11 @@ Published: Tue Dec 22 2015 04:33:54 GMT+0000 (GMT)  */
 
     if (this.config.loggingLevel === 'HIGH') logger.debug('Listener is now active.');
 
-    var windowListener = hasEventListener ? window.addEventListener : window.attachEvent,
-        docListener = hasEventListener ? document.addEventListener : document.attachEvent,
-        initialLink = this.config.useHistory && hasHistory ? window.location.pathname : window.location.hash;
+    var initialLink = this.config.useHistory && hasHistory ? window.location.pathname : window.location.hash;
 
     this.config.listenerActive = true;
 
-    docListener('click', function (e) {
+    listenEvent(document, 'click', function (e) {
       window.LodeVar.previousPath = formatRoute.call(_this, removeOrigin(window.location.href));
     });
 
@@ -500,22 +509,22 @@ Published: Tue Dec 22 2015 04:33:54 GMT+0000 (GMT)  */
 
       if (this.config.loggingLevel === 'HIGH') logger.debug('Listening for hash changes.');
 
-      windowListener(hasEventListener ? 'hashchange' : 'onhashchange', function () {
+      listenEvent(window, hasEventListener ? 'hashchange' : 'onhashchange', function () {
         _this.resolve(formatRoute.call(_this, window.location.hash));
       });
     } else if (this.config.useHistory && hasHistory) {
 
       if (this.config.loggingLevel === 'HIGH') logger.debug('Listening for clicks or popstate.');
 
-      docListener('click', function (e) {
-
+      listenEvent(document, 'click', function (e) {
         var historyLink = historyClick.call(_this, e);
 
         if (historyLink) {
           _this.resolve(historyLink);
         }
       });
-      windowListener('popstate', function () {
+
+      listenEvent(window, 'popstate', function () {
         _this.resolve(formatRoute.call(_this, window.location.pathname));
       });
     }
