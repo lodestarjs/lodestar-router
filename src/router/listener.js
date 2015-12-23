@@ -78,6 +78,20 @@ function historyClick( e ) {
 
 }
 
+function listenEvent ( target, e, f ) {
+
+  if ( hasEventListener ) {
+
+    target.addEventListener(e, f, false);
+
+  } else {
+
+    target.attachEvent(e, f);
+
+  }
+
+}
+
 /**
  * This sets up the events for 'Hashchange' and 'History' mode depending on what has been selected and what is available.
  * @return {Void}, nothing returned
@@ -88,33 +102,37 @@ function listener() {
 
   if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listener is now active.');
 
-  let windowListener = hasEventListener ? window.addEventListener : window.attachEvent,
-    docListener = hasEventListener ? document.addEventListener : document.attachEvent,
-    initialLink = this.config.useHistory && hasHistory ? window.location.pathname : window.location.hash;
+  let initialLink = this.config.useHistory && hasHistory ? window.location.pathname : window.location.hash;
 
   this.config.listenerActive = true;
 
-  docListener('click', (e) => { window.LodeVar.previousPath = formatRoute.call( this, removeOrigin( window.location.href )); } );
+  listenEvent( document, 'click', (e) => {
+    window.LodeVar.previousPath = formatRoute.call( this, removeOrigin( window.location.href ));
+  });
 
   if ( !this.config.useHistory || !hasHistory ) {
 
     if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listening for hash changes.');
 
-    windowListener(hasEventListener ? 'hashchange' : 'onhashchange', () => { this.resolve( formatRoute.call( this, window.location.hash ) ); } );
+    listenEvent( window, hasEventListener ? 'hashchange' : 'onhashchange', () => {
+      this.resolve( formatRoute.call( this, window.location.hash ) );
+    });
 
   } else if ( this.config.useHistory && hasHistory ) {
 
     if ( this.config.loggingLevel === 'HIGH' ) logger.debug('Listening for clicks or popstate.');
 
-    docListener('click',(e) => {
-
+    listenEvent( document, 'click', (e) => {
       let historyLink = historyClick.call(this, e);
 
       if ( historyLink ) {
         this.resolve(historyLink);
       }
     });
-    windowListener('popstate',() => { this.resolve( formatRoute.call( this, window.location.pathname )); } );
+
+    listenEvent( window, 'popstate', () => {
+      this.resolve( formatRoute.call( this, window.location.pathname ));
+    });
 
   }
 
